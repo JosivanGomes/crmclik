@@ -58,17 +58,22 @@
          <p>Cli-K</p>
        </a>
 
-       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Alterna navegação">
-         <span class="navbar-toggler-icon"></span>
-       </button>
 
-         <ul class="navbar-nav">
-           <li class="nav-item">
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         <ul class="navbar-nav" style="margin-left: 230px">
 
+
+           <li>
+             <button type="button" class="btn btn-primary">
+              Pendências <span class="badge badge-danger">
+                <?php
+                  $con = mysqli_connect("localhost", "root", "", "crmclik");
+                  $sql = mysqli_query($con, "SELECT * FROM proposta WHERE situacao = 'CHECK OK' OR sitctrt = 'OK'") or print mysql_error();
+                  echo mysqli_num_rows($sql);
+                ?>
+              </span>
+              </button>
            </li>
+
            <li class="nav-item">
              <a class="nav-link" href="logout.php">Sair</a>
            </li>
@@ -85,7 +90,7 @@
        $vendedor = $dados["id"];
        $nmvendedor = $dados["login"];
        $con = mysqli_connect("localhost", "root", "", "crmclik");
-       $sql = mysqli_query($con, "SELECT * FROM proposta WHERE id_vendedor = '{$vendedor}'") or print mysql_error();
+       $sql = mysqli_query($con, "SELECT * FROM proposta WHERE id_bko = '{$vendedor}'") or print mysql_error();
        $linha = mysqli_fetch_array($sql);
 
        echo "<h4>Pessoal:</h4>";
@@ -97,12 +102,16 @@
          echo "<thead class=\"thead-dark\">";
          echo "<tr>";
 
+         echo "<th scope=\"col\"></th>";
+
          echo   "<th scope=\"col\">Status</th>";
          echo   "<th scope=\"col\">Data Instalação</th>";
          echo   "<th scope=\"col\">Turno</th>";
          echo   "<th scope=\"col\">Inst Chamado</th>";
-         echo   "<th scope=\"col\">Cidade</th>";
          echo   "<th scope=\"col\">Contrato</th>";
+         echo   "<th scope=\"col\">Vendedor</th>";
+         echo   "<th scope=\"col\">Supervisor</th>";
+         echo   "<th scope=\"col\">Cidade</th>";
          echo   "<th scope=\"col\">Data Venda</th>";
          echo   "<th scope=\"col\">CPF Cliente</th>";
          echo   "<th scope=\"col\">Cliente</th>";
@@ -114,8 +123,8 @@
          echo   "<th scope=\"col\">Fone</th>";
          echo   "<th scope=\"col\">Móvel</th>";
          echo   "<th scope=\"col\">Valor</th>";
-         echo   "<th scope=\"col\">Pontuação</th>";
-         echo   "<th scope=\"col\">BackOffice</th>";
+
+
          echo "</tr>";
          echo "</thead>";
 
@@ -126,40 +135,67 @@
            $clienteCpf = $linha["cpf_cliente"];
            $sqlC = mysqli_query($con, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
            $linhaC = mysqli_fetch_array($sqlC);
+           $idVenda = $linha["id"];
+             echo   "<td>
+
+                          <button type=\"button\" class=\"btn btn-success\">Finalizar</button>
+
+             </td>";
 
 
-             $status = $linha["situacao"];
-             echo   "<td>$status</td>";
+             echo"<td>
+                    <select id=\"status$idVenda \">
+                      <option>Selecione ...</option>
+                      <option>APROVADO</option>
+                      <option>CHAMADO</option>
+                      <option>NEGADO</option>
+                      <option>CHECK OK</option>
+                      <option>RETORNO VENDEDOR</option>
+                      <option>BLOQUEADO</option>
+                      <option>APROVADO DIVERGENTE</option>
+                      <option>SEM CONTATO</option>
+                    </select>
+                  </td>";
 
-             $dtInstala = $linha["data_instalacao"];
-             if(empty($dtInstala)):
-               echo   "<td>$dtInstala</td>";
-             else:
-               $newDate = date("d/m/Y", strtotime($dtInstala));
-               echo   "<td>$newDate</td>";
-             endif;
+             echo "<td>
+                    <input id=\"dtInstala$idVenda\" type=\"date\" style=\"font-size:13px\">
+                   </td>";
 
-               $turnoInst = $linha["turnoinst"];
-               if ($turnoInst == "NULL"):
-                 echo "<td></td>";
-               else:
-                 echo   "<td>$turnoInst</td>";
-               endif;
+             echo "<td>
+                   <select id=\"turno$idVenda \">
+                     <option>Selecione ...</option>
+                     <option>Manhã</option>
+                     <option>Tarde</option>
+                   </td>";
 
-               $chamadoinst = $linha["chamadoinst"];
-               if ($chamadoinst == "NULL"):
-                 echo "<td></td>";
-               else:
-                 echo   "<td>$chamadoinst</td>";
-               endif;
+            echo "<td><button type=\"button\" class=\"btn btn-outline-primary\" data-toggle=\"modal\" data-target=\"#modal$idVenda\">Ver/Atualizar</button></td>";
 
 
+
+
+               echo "<td>
+                      <input type=\"text\">
+                      <input type=\"checkbox\"  id=\"exampleCheck1\">
+                      <label>OK</label>
+
+                    </td>";
+
+               $idVendedor = $linha["id_vendedor"];
+               $sqlV = mysqli_query($con, "SELECT * FROM operador WHERE id = '{$idVendedor}'") or print mysql_error();
+               $linhaV = mysqli_fetch_array($sqlV);
+               $nmVend = $linhaV["login"];
+               echo   "<td>$nmVend</td>";
+
+               $idSuper = $linhaV["id_super"];
+               $sqlS = mysqli_query($con, "SELECT * FROM supervisor WHERE id = '{$idSuper}'") or print mysql_error();
+               $linhaS = mysqli_fetch_array($sqlS);
+               $nmSup = $linhaS["login"];
+               echo   "<td>$nmSup</td>";
 
                $localCidade = $linhaC["cidade"];
                echo   "<td>$localCidade</td>";
 
-               $contratoC = $linha["contrato"];
-               echo   "<td>$contratoC</td>";
+
 
 
 
@@ -224,20 +260,36 @@
 
 
 
+               $chamado = $linha["chamadoinst"];
 
-             $pontuacao = $linha["ponto"];
-             echo   "<td>$pontuacao</td>";
-
-             $idBko = $linha["id_bko"];
-             $sqlB = mysqli_query($con, "SELECT * FROM operador WHERE id = '{$idBko}'") or print mysql_error();
-             $linhaB = mysqli_fetch_array($sqlB);
-             $nmBko = $linhaB["login"];
-             echo   "<td>$nmBko</td>";
 
              echo "</tr>";
 
 
 
+             echo "<!-- Modal -->
+                  <div class=\"modal fade\" id=\"modal$idVenda\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"TituloModalCentralizado\" aria-hidden=\"true\">
+                    <div class=\"modal-dialog modal-dialog-centered\" role=\"document\">
+                      <div class=\"modal-content\">
+                        <div class=\"modal-header\">
+                            $chamado
+                          <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Fechar\">
+                            <span aria-hidden=\"true\">&times;</span>
+                          </button>
+                        </div>
+
+                        <div class=\"modal-body\">
+                          <textarea id=\"chamadoinst$idVenda\" rows=\"5\" cols=\"63\">
+
+                          </textarea>
+                        </div>
+                        <div class=\"modal-footer\">
+                          <button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\">Fechar</button>
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>";
 
 
 
@@ -258,7 +310,7 @@
        //Dados Gerais
        echo "<h4>Geral:</h4>";
 
-       $sql = mysqli_query($con, "SELECT * FROM proposta WHERE situacao = 'Cadastro - ok'") or print mysql_error();
+       $sql = mysqli_query($con, "SELECT * FROM proposta WHERE situacao = 'Cadastro - ok' OR situacao = 'SEM CONTATO'") or print mysql_error();
        $linha = mysqli_fetch_array($sql);
 
 
@@ -301,12 +353,12 @@
 
              echo   "<td>
 
-                        <button type=\"button\" class=\"btn btn-outline-primary\" onclick=\"teste($idVenda)\">Tratar</button>
+                        <button type=\"button\" class=\"btn btn-outline-primary\" onclick=\"pgProposta($idVenda)\">Tratar</button>
 
                     </td>";
 
              $status = $linha["situacao"];
-             echo   "<td>$status</td>";
+             echo   "<td title=\"Obs: Lorem ipsum et at vitae posuere ullamcorper etiam nulla, inceptos phasellus id dapibus ullamcorper ornare pretium eu, placerat semper etiam feugiat justo porttitor semper. lacus ipsum eu dictum ultricies lacus himenaeos risus ut, consequat metus mollis sem tristique ultrices est fringilla et, inceptos pellentesque facilisis quisque sit proin convallis. proin molestie quisque dictum feugiat iaculis suscipit ornare orci augue, elementum scelerisque bibendum primis duis lacinia et tempor morbi scelerisque, sagittis quam in consequat consectetur pretium molestie fames. at viverra nibh aenean cubilia suscipit class purus, velit porttitor mattis laoreet integer.\">$status</td>";
 
 
              $idVendedor = $linha["id_vendedor"];
@@ -412,11 +464,11 @@
   <script>
 
 
-  function teste(x){
+  function pgProposta(x){
     $.ajax({
       url: 'enviarbko.php',
       type: 'POST',
-      data:{"tvplano" : x},
+      data:{"proposta" : x},
 
       success: function(data) {
         console.log(data);
