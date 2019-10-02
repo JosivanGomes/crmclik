@@ -59,19 +59,21 @@
        </a>
 
 
-         <ul class="navbar-nav" style="margin-left: 230px">
+         <ul class="navbar-nav" style="margin-left: 180px">
 
+           <li class="nav-item">
+             <a class="nav-link" href="bko.php">Home</a>
+           </li>
 
            <li>
-             <button type="button" class="btn btn-primary">
-              Pendências <span class="badge badge-danger">
+             <a href="pendenciabko.php" class="btn btn-primary" role="button" aria-pressed="true">Pendências <span class="badge badge-danger">
                 <?php
                   $con = mysqli_connect("localhost", "root", "", "crmclik");
-                  $sql = mysqli_query($con, "SELECT * FROM proposta WHERE situacao = 'CHECK OK' OR sitctrt = 'OK'") or print mysql_error();
+                  $sql = mysqli_query($con, "SELECT * FROM proposta WHERE situacao = 'APROVADO' OR situacao = 'CHAMADO' OR situacao = 'CHECK OK' AND sitctrt = 'N-OK'") or print mysql_error();
                   echo mysqli_num_rows($sql);
                 ?>
               </span>
-              </button>
+            </a>
            </li>
 
            <li class="nav-item">
@@ -90,7 +92,7 @@
        $vendedor = $dados["id"];
        $nmvendedor = $dados["login"];
        $con = mysqli_connect("localhost", "root", "", "crmclik");
-       $sql = mysqli_query($con, "SELECT * FROM proposta WHERE id_bko = '{$vendedor}'") or print mysql_error();
+       $sql = mysqli_query($con, "SELECT * FROM proposta WHERE id_bko = '{$vendedor}' AND situacao = 'Em Tratamento'") or print mysql_error();
        $linha = mysqli_fetch_array($sql);
 
        echo "<h4>Pessoal:</h4>";
@@ -132,20 +134,25 @@
          //Lembrete = tentar fazer uma nova tabela a cada ciclo
          do {
 
+
+
            $clienteCpf = $linha["cpf_cliente"];
            $sqlC = mysqli_query($con, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
            $linhaC = mysqli_fetch_array($sqlC);
            $idVenda = $linha["id"];
+
+
+
              echo   "<td>
 
-                          <button type=\"button\" class=\"btn btn-success\">Finalizar</button>
+                          <button type=\"button\" class=\"btn btn-success\" onclick=\"finaliza$idVenda()\">Finalizar</button>
 
              </td>";
 
 
              echo"<td>
-                    <select id=\"status$idVenda \">
-                      <option>Selecione ...</option>
+                    <select id=\"status$idVenda\">
+                      <option></option>
                       <option>APROVADO</option>
                       <option>CHAMADO</option>
                       <option>NEGADO</option>
@@ -162,9 +169,9 @@
                    </td>";
 
              echo "<td>
-                   <select id=\"turno$idVenda \">
-                     <option>Selecione ...</option>
-                     <option>Manhã</option>
+                   <select id=\"turno$idVenda\">
+                     <option></option>
+                     <option>Manha</option>
                      <option>Tarde</option>
                    </td>";
 
@@ -174,8 +181,8 @@
 
 
                echo "<td>
-                      <input type=\"text\">
-                      <input type=\"checkbox\"  id=\"exampleCheck1\">
+                      <input type=\"text\" id=\"ctt$idVenda\">
+                      <input type=\"checkbox\"  id=\"stctt$idVenda\" value=\"OK\" >
                       <label>OK</label>
 
                     </td>";
@@ -279,9 +286,7 @@
                         </div>
 
                         <div class=\"modal-body\">
-                          <textarea id=\"chamadoinst$idVenda\" rows=\"5\" cols=\"63\">
-
-                          </textarea>
+                          <textarea id=\"chamadoinst$idVenda\" rows=\"5\" cols=\"63\"></textarea>
                         </div>
                         <div class=\"modal-footer\">
                           <button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\">Fechar</button>
@@ -289,7 +294,58 @@
                         </div>
                       </div>
                     </div>
-                  </div>";
+                  </div>
+
+                  <script>
+
+                    var sttsVenda$idVenda = document.getElementById('status$idVenda');
+                    var dtInst$idVenda = document.getElementById('dtInstala$idVenda');
+                    var turno$idVenda = document.getElementById('turno$idVenda');
+                    var chamadoinst$idVenda = document.getElementById('chamadoinst$idVenda');
+                    var ctt$idVenda = document.getElementById('ctt$idVenda');
+
+                    var stctt$idVenda = document.getElementById('stctt$idVenda');
+
+
+
+
+
+                    function finaliza$idVenda(){
+                      if (stctt$idVenda.checked == true) {
+                        var status$idVenda = \"OK\";
+                        } else {
+                        var status$idVenda = \"N-OK\";
+                      }
+                      $.ajax({
+                        url: 'atualizabko.php',
+                        type: 'POST',
+                        data:{\"idVenda\" : $idVenda,
+                              \"sitVenda\" : sttsVenda$idVenda.value,
+                              \"dtInst\" : dtInst$idVenda.value,
+                              \"turno\" : turno$idVenda.value,
+                              \"chmdinst\" : chamadoinst$idVenda.value,
+                              \"contrato\" : ctt$idVenda.value,
+                              \"statusContrato\" : status$idVenda},
+
+                        success: function(data) {
+                          console.log(data);
+                          data = $.parseJSON(data);
+                            alert(data.retorno);
+
+                            window.location.reload()
+                          }
+
+
+                        });
+
+
+                    }
+
+                  </script>
+
+                  ";
+
+
 
 
 
@@ -358,7 +414,8 @@
                     </td>";
 
              $status = $linha["situacao"];
-             echo   "<td title=\"Obs: Lorem ipsum et at vitae posuere ullamcorper etiam nulla, inceptos phasellus id dapibus ullamcorper ornare pretium eu, placerat semper etiam feugiat justo porttitor semper. lacus ipsum eu dictum ultricies lacus himenaeos risus ut, consequat metus mollis sem tristique ultrices est fringilla et, inceptos pellentesque facilisis quisque sit proin convallis. proin molestie quisque dictum feugiat iaculis suscipit ornare orci augue, elementum scelerisque bibendum primis duis lacinia et tempor morbi scelerisque, sagittis quam in consequat consectetur pretium molestie fames. at viverra nibh aenean cubilia suscipit class purus, velit porttitor mattis laoreet integer.\">$status</td>";
+             $obs = $linha["observacao"];
+             echo   "<td title=\"Obs: $obs\">$status</td>";
 
 
              $idVendedor = $linha["id_vendedor"];
