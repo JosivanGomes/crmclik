@@ -103,7 +103,7 @@
 
    <!--TELA PRINCIPAL-->
 
-      <div id="grafico" style="margin-left: 110px; margin-top: 20px;">
+      <div id="grafico" style="margin-left: 110px; margin-top: 20px; margin-bottom: 20px;">
         <div id="top_x_div" style="height:300px;"></div>
       </div>
 
