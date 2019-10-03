@@ -59,7 +59,7 @@
        </a>
 
 
-         <ul class="navbar-nav" style="margin-left: 180px">
+         <ul class="navbar-nav" style="margin-left: 90px">
 
            <li class="nav-item">
              <a class="nav-link" href="bko.php">Home</a>
@@ -69,11 +69,15 @@
              <a href="pendenciabko.php" class="btn btn-primary" role="button" aria-pressed="true">Pendências <span class="badge badge-danger">
                 <?php
                   $con = mysqli_connect("localhost", "root", "", "crmclik");
-                  $sql = mysqli_query($con, "SELECT * FROM proposta WHERE situacao = 'APROVADO' OR situacao = 'CHAMADO' OR situacao = 'CHECK OK' AND sitctrt = 'N-OK'") or print mysql_error();
+                  $sql = mysqli_query($con, "SELECT * FROM proposta WHERE sitctrt = 'N-OK' AND situacao = 'APROVADO' OR situacao = 'CHAMADO' OR situacao = 'CHECK OK'") or print mysql_error();
                   echo mysqli_num_rows($sql);
                 ?>
               </span>
             </a>
+           </li>
+
+           <li class="nav-item">
+             <a class="nav-link" href="dashbbko.php">DashBoard</a>
            </li>
 
            <li class="nav-item">

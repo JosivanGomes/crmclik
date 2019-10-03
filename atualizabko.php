@@ -65,7 +65,8 @@ if(isset($_POST['statusContrato'])):
   endif;
 endif;
 
-
+$sql = "UPDATE proposta SET id_bkoPend = 0 WHERE id = $idvenda";
+mysqli_query($connect, $sql);
 
 if($situacao == "SEM CONTATO"):
   $sql = "UPDATE proposta SET id_bko = 0 WHERE id = $idvenda";
