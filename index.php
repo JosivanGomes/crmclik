@@ -29,12 +29,12 @@
             $_SESSION['logado'] = true;
             $_SESSION['id_usuario'] = $dados['id'];
 
-            header('Location: operacao.php');
+            header('Location: operacao/operacao.php');
           elseif ($dados['cargo'] == "BACKOFFICE"):
             $_SESSION['logado'] = true;
             $_SESSION['id_usuario'] = $dados['id'];
 
-            header('Location: bko.php');
+            header('Location: bko/bko.php');
 
           elseif ($dados['cargo'] == "SUPER"):
             $_SESSION['logado'] = true;

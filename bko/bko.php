@@ -54,12 +54,12 @@
    <header>
      <nav class="navbar navbar-expand-lg">
        <a class="navbar-brand">
-         <img src="imagens/LOGO.png" width="30" height="30" class="rounded-circle">
+         <img src="../imagens/LOGO.png" width="30" height="30" class="rounded-circle">
          <p>Cli-K</p>
        </a>
 
 
-         <ul class="navbar-nav" style="margin-left: 90px">
+         <ul class="navbar-nav" style="margin-left: 100px">
 
            <li class="nav-item">
              <a class="nav-link" href="bko.php">Home</a>
