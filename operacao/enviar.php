@@ -87,6 +87,13 @@
       endif;
     endif;
 
+    if(isset($_POST['pontoPlanoM'])):
+      $pontoM = $_POST['pontoPlanoM'];
+      if (empty($pontoM)):
+          $pontoM = 0;
+      endif;
+    endif;
+
 
   // Dados Cliente
 
@@ -134,7 +141,7 @@
   else:
       mysqli_query($con, "INSERT INTO cliente (cpf, nome, cidade, telfixo, telmovel, tel3) VALUES ('$cpfCliente', '$nomeCliente', '$cidade', '$telfixo', '$telmovel', '$telfone')");
 
-      mysqli_query($con,"INSERT INTO `proposta`(`data_venda`, `situacao`, `tv`, `pt_adc_tv`, `internet`, `telefone`, `movel`, `depen_movel`, `observacao`, `preco`, `ponto`, `id_vendedor`, `cpf_cliente`) VALUES ('$dataVenda','$situacao','$tv','$pttv','$net','$fixo','$movel', '$depMvl','$obs','$preco','$ponto','$vendedor','$cpfCliente')");
+      mysqli_query($con,"INSERT INTO `proposta`(`data_venda`, `situacao`, `tv`, `pt_adc_tv`, `internet`, `telefone`, `movel`, `depen_movel`, `observacao`, `preco`, `ponto`, `pontoM`, `id_vendedor`, `cpf_cliente`) VALUES ('$dataVenda','$situacao','$tv','$pttv','$net','$fixo','$movel', '$depMvl','$obs','$preco','$ponto', $pontoM,'$vendedor','$cpfCliente')");
 
       echo json_encode(array('retorno' => 'Novo Cliente e nova proposta efetuada com sucesso!'));
   endif;

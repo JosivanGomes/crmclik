@@ -73,18 +73,12 @@
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Alterna navegação">
           <span class="navbar-toggler-icon"></span>
         </button>
-          <ul class="navbar-nav">
+          <ul class="navbar-nav" style="margin-left: 35px">
             <li class="nav-item">
               <a class="nav-link" href="operacao.php">Minhas Vendas</a>
             </li>
-            <li class="nav-item dropdown" id="drop">
-              <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Dashboard</a>
-              <div class="dropdown-menu">
-                <a class="dropdown-item" href="#">Em Aberto</a>
-                <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="#">Finalizado: Mês passado</a>
-                  <a class="dropdown-item" href="#">Finalizado: Mês retrasado</a>
-              </div>
+            <li class="nav-item">
+              <a class="nav-link" href="dashboard.php">Dashboard</a>
             </li>
             <li class="nav-item">
 
@@ -114,7 +108,7 @@
 
               <div class="form-row">
 
-                <div class="form-group col-md-5">
+                <div class="form-group col-md-5" style="margin-right: 30px;" onclick="apgpreco()">
                   <label>Cidade - UF:</label>
                   <select class="custom-select mr-sm-2" id="cidadeCliente" required>
                     <option selected> </option>
@@ -154,6 +148,21 @@
                     <option>CURITIBA - PR</option>
                     <option>BELO HORIZONTE - MG</option>
                   </select>
+                </div>
+
+
+
+                <div class="form row">
+
+                  <div class="form col-sm-6" style="margin-right: 0px;">
+                    <label>Pontos: </label>
+                    <input class="form-control" id="pontoPlano" disabled>
+                  </div>
+
+                  <div class="form col-sm-6" style="margin-right: 0px;">
+                    <label>Pontos Móvel: </label>
+                    <input class="form-control" id="pontoPlanoM" disabled>
+                  </div>
                 </div>
 
               </div>
@@ -279,20 +288,16 @@
                   <div class="col-sm-8">
                     <input class="form-control" id="precoPlano" placeholder="R$" onclick="mostraPonto()" required>
                   </div>
+
                 </div>
 
-                <div class="form-group row">
-                  <label class="col-sm-4 col-form-label">Pontos: </label>
-                  <div class="col-sm-8">
-                    <input class="form-control" id="pontoPlano" disabled>
-                  </div>
-                </div>
+
 
               </div>
 
               <div class="form-group col-md-2">
               <div class="col-sm-4">
-                <button type="submit" class="btn btn-primary" onclick="propCliente()">Enviar</button>
+                <button type="submit" class="btn btn-primary" onclick="propCliente()" id = "btnEnv">Enviar</button>
               </div>
               </div>
 
@@ -352,7 +357,7 @@
         $vendedor = $dados["id"];
         $nmvendedor = $dados["login"];
         $con = mysqli_connect("localhost", "root", "", "crmclik");
-        $sql = mysqli_query($con, "SELECT * FROM proposta WHERE id_vendedor = '{$vendedor}'") or print mysql_error();
+        $sql = mysqli_query($con, "SELECT * FROM proposta WHERE id_vendedor = '{$vendedor}' and situacao = 'SEM CONTATO' OR situacao = 'RETORNO VENDEDOR' OR situacao = 'EM TRATAMENTO' OR situacao = 'CHECK OK' OR situacao = 'CADASTRO OK'") or print mysql_error();
         $linha = mysqli_fetch_array($sql);
 
 
@@ -529,6 +534,11 @@
 
     <script language="javascript">
 
+        //apagar preço
+        function apgpreco(){
+          document.getElementById("precoPlano").value = '';
+          document.getElementById("btnEnv").setAttribute("disabled", "disabled");
+        };
 
         //dados proposta
         var tv = $("#tvplano");
@@ -686,12 +696,15 @@
 
         function mostraPonto(){
 
-          document.getElementById("pontoPlano").setAttribute('placeholder',(pontotv + pontonet + pontofixo + pontomovel));
+          document.getElementById("pontoPlano").setAttribute('placeholder',(pontotv + pontonet + pontofixo));
+          document.getElementById("pontoPlanoM").setAttribute('placeholder',(pontomovel));
+          document.getElementById("btnEnv").removeAttribute('disabled');
         }
 
 
         function  propCliente(){
-          var ponto = (pontotv + pontonet + pontofixo + pontomovel);
+          var ponto = (pontotv + pontonet + pontofixo);
+          var pontoMov = pontomovel;
           var controlBtn = 0;
 
           if(document.getElementById('nomeCliente').value != ""){
@@ -728,6 +741,7 @@
               "obsvenda": obs.val(),
               "precoPlano": prec.val(),
               "pontoPlano": ponto,
+              "pontoPlanoM": pontoMov,
               "cidadeCliente": cidade.val(),
               "cpfCliente": cpfC.val(),
               "nomeCliente": nomeC.val(),
