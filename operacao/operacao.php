@@ -108,7 +108,7 @@
 
               <div class="form-row">
 
-                <div class="form-group col-md-5" style="margin-right: 30px;" onclick="apgpreco()">
+                <div class="form-group col-md-5" style="margin-right: 30px;" onblur="apgpreco()">
                   <label>Cidade - UF:</label>
                   <select class="custom-select mr-sm-2" id="cidadeCliente" required>
                     <option selected> </option>
@@ -171,14 +171,14 @@
 
                   <div class="form-group col-md-8">
                       <label>Nome:</label>
-                      <input type="text" class="form-control" id="nomeCliente" required>
+                      <input type="text" class="form-control" id="nomeCliente" onblur="apgpreco()" required>
                   </div>
 
 
 
                   <div class="form-group col-md-4">
                     <label>Cpf:</label>
-                    <input type="text" class="form-control" id="cpfCliente" required>
+                    <input type="text" class="form-control" id="cpfCliente" onblur="apgpreco()" required>
 
                     <div id="resposta">
                     </div>
@@ -209,7 +209,7 @@
                 <div class="form-row">
                   <div class="form-group col-md-4">
                     <label>Tv:</label>
-                    <select class="custom-select mr-sm-2" id="tvplano" onblur="somaTV()">
+                    <select class="custom-select mr-sm-2" id="tvplano" onblur="somaTV(); apgpreco()">
                       <option> </option>
                       <option>TOP 4K COM PO</option>
                       <option>TOP 4K SEM PO</option>
@@ -222,12 +222,12 @@
 
                   <div class="form-group col-md-3">
                     <label>Pontos adicionais:</label>
-                    <input type="number" class="form-control" id="ptvplano" min="0" max="10">
+                    <input type="number" class="form-control" id="ptvplano"  onblur="apgpreco()" min="0" max="10">
                   </div>
 
                   <div class="form-group col-md-5">
                     <label>Internet:</label>
-                    <select class="custom-select mr-sm-2" id="netplano" onblur="somaNET()">
+                    <select class="custom-select mr-sm-2" id="netplano" onblur="somaNET(); apgpreco()">
                       <option> </option>
                       <option>500 MB</option>
                       <option>240 MB</option>
@@ -244,7 +244,7 @@
 
                   <div class="form-group col-md-4">
                     <label>Fixo:</label>
-                    <select class="custom-select mr-sm-2" id="fixoplano" onblur="somaFIXO()">
+                    <select class="custom-select mr-sm-2" id="fixoplano" onblur="somaFIXO(); apgpreco()">
                       <option> </option>
                       <option>MUNDO TOTAL</option>
                       <option>BRASIL TOTAL</option>
@@ -255,7 +255,7 @@
 
                 <div class="form-group col-md-3">
                   <label>Movel:</label>
-                  <select class="custom-select mr-sm-2" id="movelplano" onblur="somaMOVEL()">
+                  <select class="custom-select mr-sm-2" id="movelplano" onblur="somaMOVEL(); apgpreco()">
                     <option> </option>
                     <option>CLARO GIGA 60GB</option>
                     <option>CLARO GIGA 30GB</option>
@@ -286,7 +286,7 @@
                 <div class="form-group row">
                   <label class="col-sm-4 col-form-label">Preço: </label>
                   <div class="col-sm-8">
-                    <input class="form-control" id="precoPlano" placeholder="R$" onclick="mostraPonto()" required>
+                    <input class="form-control" id="precoPlano" placeholder="R$" onblur="mostraPonto()"  required>
                   </div>
 
                 </div>
@@ -357,7 +357,7 @@
         $vendedor = $dados["id"];
         $nmvendedor = $dados["login"];
         $con = mysqli_connect("localhost", "root", "", "crmclik");
-        $sql = mysqli_query($con, "SELECT * FROM proposta WHERE id_vendedor = '{$vendedor}' and situacao = 'SEM CONTATO' OR situacao = 'RETORNO VENDEDOR' OR situacao = 'EM TRATAMENTO' OR situacao = 'CHECK OK' OR situacao = 'CADASTRO OK'") or print mysql_error();
+        $sql = mysqli_query($con, "SELECT * FROM proposta WHERE situacao = 'SEM CONTATO' OR situacao = 'RETORNO VENDEDOR' OR situacao = 'EM TRATAMENTO' OR situacao = 'CHECK OK' OR situacao = 'CADASTRO OK' and id_vendedor = '{$vendedor}'") or print mysql_error();
         $linha = mysqli_fetch_array($sql);
 
 
@@ -387,6 +387,7 @@
           echo   "<th scope=\"col\">Móvel</th>";
           echo   "<th scope=\"col\">Valor</th>";
           echo   "<th scope=\"col\">Pontuação</th>";
+          echo   "<th scope=\"col\">Pontuação - Móvel</th>";
           echo   "<th scope=\"col\">BackOffice</th>";
           echo "</tr>";
           echo "</thead>";
@@ -500,6 +501,9 @@
               $pontuacao = $linha["ponto"];
               echo   "<td>$pontuacao</td>";
 
+              $pontuacaoMovel = $linha["pontoM"];
+              echo   "<td>$pontuacaoMovel</td>";
+
               $idBko = $linha["id_bko"];
               $sqlB = mysqli_query($con, "SELECT * FROM operador WHERE id = '{$idBko}'") or print mysql_error();
               $linhaB = mysqli_fetch_array($sqlB);
@@ -540,6 +544,12 @@
           document.getElementById("btnEnv").setAttribute("disabled", "disabled");
         };
 
+        function mostraPonto(){
+
+          document.getElementById("pontoPlano").setAttribute('placeholder',(pontotv + pontonet + pontofixo));
+          document.getElementById("pontoPlanoM").setAttribute('placeholder',(pontomovel));
+          document.getElementById("btnEnv").removeAttribute('disabled');
+        };
         //dados proposta
         var tv = $("#tvplano");
         var pttv = $("#ptvplano");
@@ -694,12 +704,6 @@
           }
         }
 
-        function mostraPonto(){
-
-          document.getElementById("pontoPlano").setAttribute('placeholder',(pontotv + pontonet + pontofixo));
-          document.getElementById("pontoPlanoM").setAttribute('placeholder',(pontomovel));
-          document.getElementById("btnEnv").removeAttribute('disabled');
-        }
 
 
         function  propCliente(){

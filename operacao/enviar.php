@@ -21,7 +21,7 @@
 // Dados base
   $dataVenda = date("Y-m-d");
   $vendedor = $dados["id"];
-  $situacao = "Cadastro - ok";
+  $situacao = "CADASTRO OK";
 
   // Dados proposta
     if(isset($_POST['tvplano'])):
@@ -136,7 +136,7 @@
       mysqli_query($con, "UPDATE cliente SET telfixo='$telfixo', telmovel='$telmovel', tel3='$telfone' WHERE CPF='$cpfCliente'");
 
 
-      mysqli_query($con,"INSERT INTO `proposta`(`data_venda`, `situacao`, `tv`, `pt_adc_tv`, `internet`, `telefone`, `movel`, `depen_movel`, `observacao`, `preco`, `ponto`, `id_vendedor`, `cpf_cliente`) VALUES ('$dataVenda','$situacao','$tv','$pttv','$net','$fixo','$movel', '$depMvl','$obs','$preco','$ponto','$vendedor','$cpfCliente')");
+      mysqli_query($con,"INSERT INTO `proposta`(`data_venda`, `situacao`, `tv`, `pt_adc_tv`, `internet`, `telefone`, `movel`, `depen_movel`, `observacao`, `preco`, `ponto`, `pontoM`, `id_vendedor`, `cpf_cliente`) VALUES ('$dataVenda','$situacao','$tv','$pttv','$net','$fixo','$movel', '$depMvl','$obs','$preco','$ponto', $pontoM,'$vendedor','$cpfCliente')");
       echo json_encode(array('retorno' => 'Cliente atualizado, nova proposta efetuada com sucesso!'));
   else:
       mysqli_query($con, "INSERT INTO cliente (cpf, nome, cidade, telfixo, telmovel, tel3) VALUES ('$cpfCliente', '$nomeCliente', '$cidade', '$telfixo', '$telmovel', '$telfone')");
