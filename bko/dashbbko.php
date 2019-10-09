@@ -63,7 +63,7 @@
        </a>
 
 
-         <ul class="navbar-nav" style="margin-left: 45px">
+         <ul class="navbar-nav" style="margin-left: 40px">
 
            <li class="nav-item">
              <a class="nav-link" href="bko.php">Home</a>
@@ -92,6 +92,7 @@
               </div>
            </li>
 
+
            <li class="nav-item">
              <a class="nav-link" href="logout.php">Sair</a>
            </li>
@@ -104,7 +105,7 @@
    <!--TELA PRINCIPAL-->
 
       <div id="grafico" style="margin-left: 110px; margin-top: 20px; margin-bottom: 20px;">
-        <div id="top_x_div" style="height:300px;"></div>
+        <div id="top_x_div" style="height:320px;"></div>
       </div>
 
 

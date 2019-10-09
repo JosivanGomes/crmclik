@@ -80,6 +80,7 @@
              <a class="nav-link" href="dashbbko.php">DashBoard</a>
            </li>
 
+
            <li class="nav-item">
              <a class="nav-link" href="logout.php">Sair</a>
            </li>
@@ -96,7 +97,7 @@
        $vendedor = $dados["id"];
        $nmvendedor = $dados["login"];
        $con = mysqli_connect("localhost", "root", "", "crmclik");
-       $sql = mysqli_query($con, "SELECT * FROM proposta WHERE id_bko = '{$vendedor}' AND situacao = 'EM TRATAMENTO'") or print mysql_error();
+       $sql = mysqli_query($con, "SELECT * FROM proposta WHERE id_bko = '{$vendedor}' AND situacao = 'EM TRATAMENTO' AND id_bkoPend = 0") or print mysql_error();
        $linha = mysqli_fetch_array($sql);
 
        echo "<h4>Pessoal:</h4>";

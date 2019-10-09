@@ -80,6 +80,8 @@
              <a class="nav-link" href="dashbbko.php">DashBoard</a>
            </li>
 
+
+
            <li class="nav-item">
              <a class="nav-link" href="logout.php">Sair</a>
            </li>
@@ -504,7 +506,7 @@
          echo "</table>";
          echo "</div>";
        else:
-         echo "<h2>Sem dados</h2>";
+         echo "Sem dados";
        endif;
 
 

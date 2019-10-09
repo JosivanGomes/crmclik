@@ -36,6 +36,12 @@
 
             header('Location: bko/bko.php');
 
+            elseif ($dados['cargo'] == "BACKL"):
+              $_SESSION['logado'] = true;
+              $_SESSION['id_usuario'] = $dados['id'];
+
+                header('Location: bkl/bkl.php');
+
           elseif ($dados['cargo'] == "SUPER"):
             $_SESSION['logado'] = true;
             $_SESSION['id_usuario'] = $dados['id'];

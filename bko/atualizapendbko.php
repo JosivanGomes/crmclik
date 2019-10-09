@@ -20,7 +20,7 @@ $idvenda = $_POST['idVenda'];
 if(isset($_POST['statusContrato'])):
   $contratostatus = $_POST['statusContrato'];
   if (!empty($contratostatus)):
-    $sql = "UPDATE proposta SET sitctrt = '$contratostatus' WHERE id = $idvenda";
+    $sql = "UPDATE proposta SET sitctrt = '$contratostatus', situacao = 'APROVADO' WHERE id = $idvenda";
     mysqli_query($connect, $sql);
   endif;
 endif;
