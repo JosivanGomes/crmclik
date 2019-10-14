@@ -44,7 +44,20 @@ endif;
 if(isset($_POST['chmdinst'])):
   $chamadoInst = $_POST['chmdinst'];
   if (!empty($chamadoInst)):
-    $sql = "UPDATE proposta SET chamadoinst = '$chamadoInst' WHERE id = $idvenda";
+
+
+    $sqlTexto = mysqli_query($connect, "SELECT * FROM proposta WHERE id = $idvenda") or print mysql_error();
+    $linha = mysqli_fetch_array($sqlTexto);
+
+    $texto = $linha['chamadoinst'];
+
+    $dia = date("d/m/Y");
+
+
+    $texto .= "[".$chamadoInst."] --> dia: ".$dia." Bko: ".$dados["login"]."<br>";
+
+
+    $sql = "UPDATE proposta SET chamadoinst = '$texto' WHERE id = $idvenda";
     mysqli_query($connect, $sql);
   endif;
 endif;

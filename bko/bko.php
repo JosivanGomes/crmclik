@@ -59,7 +59,7 @@
        </a>
 
 
-         <ul class="navbar-nav" style="margin-left: 100px">
+         <ul class="navbar-nav" style="margin-left: 560px">
 
            <li class="nav-item">
              <a class="nav-link" href="bko.php">Home</a>

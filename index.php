@@ -46,7 +46,7 @@
             $_SESSION['logado'] = true;
             $_SESSION['id_usuario'] = $dados['id'];
 
-              header('Location: super.php');
+              header('Location: super/super.php');
           endif;
         else:
           $erros[] = "<li>Usuário e Senha não conferem!</li>";
@@ -80,6 +80,16 @@
     <div class="text-center">
       <img src="imagens/LOGO.PNG" class="rounded" alt="Logo Cli-k" width="250" height="200">
 
+      <nav class="navbar navbar-expand">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="bkl.php">SUPERVISÃO</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="bkl.php">GERÊNCIA</a>
+          </li>
+        </ul>
+      </nav>
 
       <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
         <?php
@@ -99,7 +109,13 @@
           <label for="exampleInputPassword1">Senha:</label>
           <input type="password" class="form-control" name="senha">
         </div>
+
         <button type="submit" class="btn btn-primary" name="btn-entrar">Entrar</button>
+
+
+
+
+
 
       </form>
 

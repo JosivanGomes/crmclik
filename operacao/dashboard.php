@@ -289,7 +289,6 @@
       echo "<button type=\"button\" class=\"btn btn-outline-dark\" onclick=\"mAtualVsql(5)\">BackLog <span class=\"badge badge-dark\">$ttbklg</span></button>";
 
 
-
       echo "<div style=\"margin-left: 30px; \" id=\"extraF\">";
 
       echo "</div>";
@@ -298,7 +297,12 @@
         ?>');
       }
 
+
+
+
       function mAtualVsql(x) {
+
+
 
         if (x == 1) {
 
@@ -307,6 +311,7 @@
           $vendedor = $dados["id"];
           $nmvendedor = $dados["login"];
           $con = mysqli_connect("localhost", "root", "", "crmclik");
+
 
           $sqlDsz = "SELECT * FROM proposta WHERE id_vendedor = '{$vendedor}' AND MONTH(data_instalacao) = $mAtual";
           $sqlFim = mysqli_query($con, $sqlDsz);
@@ -413,7 +418,13 @@
           endif;
 
 
+
+
+
 ?>')
+
+
+
 }else if (x == 2) {
 $("#vendasDivp2").html("");
 $("#vendasDivp2").html('<?php   $mAtual = date("m");

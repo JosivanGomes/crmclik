@@ -18,7 +18,7 @@
 
   $proposta = $_POST['proposta'];
 
-  $sql = "UPDATE proposta SET situacao = 'TRATAMENTO INSTALACAO', id_bkoPend = $id WHERE id = $proposta";
+  $sql = "UPDATE proposta SET situacao = 'TRATAMENTO CANCELADO', id_bkoPend = $id WHERE id = $proposta";
   mysqli_query($connect, $sql);
 
   echo json_encode(array('retorno' => "Proposta selecionada para tratamento"));
