@@ -63,7 +63,7 @@
        </a>
 
 
-         <ul class="navbar-nav">
+         <ul class="navbar-nav" style="margin-left: 460px;">
 
            <li class="nav-item">
              <a class="nav-link" href="operacao.php">Minhas Vendas</a>
@@ -134,7 +134,13 @@
       $operador = $dados["id"];
 
       $ativo = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND situacao = 'ATIVO' AND MONTH(data_instalacao) = $mAtual");
+      $ativoTv = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND situacao = 'ATIVO' AND MONTH(data_instalacao) = $mAtual AND tv != 'NULL'");
+      $ativoMov = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND situacao = 'ATIVO' AND MONTH(data_instalacao) = $mAtual AND movel != 'NULL'");
       $ttAtivo = mysqli_num_rows($ativo);
+      $ttAtivoTv = mysqli_num_rows($ativoTv);
+      $ttAtivoMov = mysqli_num_rows($ativoMov);
+
+
       $somaAtivo = mysqli_query($connect, "SELECT SUM(ponto) AS ponto_Ativo FROM proposta WHERE situacao = 'ATIVO' AND MONTH(data_instalacao) = $mAtual");
       $linhasmAtv = mysqli_fetch_assoc($somaAtivo);
       $somaAtv = $linhasmAtv['ponto_Ativo'];
@@ -151,7 +157,13 @@
 
 
       $aprovado = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND situacao = 'APROVADO' AND MONTH(data_instalacao) = $mAtual");
+      $aprovadoTv = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND situacao = 'APROVADO' AND MONTH(data_instalacao) = $mAtual AND tv != 'NULL'");
+      $aprovadoMov = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND situacao = 'APROVADO' AND MONTH(data_instalacao) = $mAtual AND movel != 'NULL'");
       $ttAprovado = mysqli_num_rows($aprovado);
+      $ttAprovadoTv = mysqli_num_rows($aprovadoTv);
+      $ttAprovadoMov = mysqli_num_rows($aprovadoMov);
+
+
       $somaAprovado = mysqli_query($connect, "SELECT SUM(ponto) AS ponto_Aprovado FROM proposta WHERE situacao = 'APROVADO' AND MONTH(data_instalacao) = $mAtual");
       $linhasmApvd = mysqli_fetch_assoc($somaAprovado);
       $somaApvd = $linhasmApvd['ponto_Aprovado'];
@@ -168,7 +180,13 @@
 
 
       $cancelado = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND situacao = 'COMERCIAL' AND MONTH(data_instalacao) = $mAtual");
+      $canceladoTv = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND situacao = 'COMERCIAL' AND MONTH(data_instalacao) = $mAtual AND tv != 'NULL'");
+      $canceladoMov = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND situacao = 'COMERCIAL' AND MONTH(data_instalacao) = $mAtual AND movel != 'NULL'");
       $ttCancelado = mysqli_num_rows($cancelado);
+      $ttCanceladoTv = mysqli_num_rows($canceladoTv);
+      $ttCanceladoMov = mysqli_num_rows($canceladoMov);
+
+
       $somaCancelado = mysqli_query($connect, "SELECT SUM(ponto) AS ponto_Cancel FROM proposta WHERE situacao = 'COMERCIAL' AND MONTH(data_instalacao) = $mAtual");
       $linhasmCanc = mysqli_fetch_assoc($somaCancelado);
       $somaCancel = $linhasmCanc['ponto_Cancel'];
@@ -184,7 +202,13 @@
       };
 
       $bklg = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND situacao = 'BACKLOG' AND MONTH(data_instalacao) = $mAtual");
+      $bklgTv = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND situacao = 'BACKLOG' AND MONTH(data_instalacao) = $mAtual AND tv != 'NULL'");
+      $bklgMov = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND situacao = 'BACKLOG' AND MONTH(data_instalacao) = $mAtual AND movel != 'NULL'");
       $ttbklg = mysqli_num_rows($bklg);
+      $ttbklgTv = mysqli_num_rows($bklgTv);
+      $ttbklgMov = mysqli_num_rows($bklgMov);
+
+
       $somabklg = mysqli_query($connect, "SELECT SUM(ponto) AS ponto_Bko FROM proposta WHERE situacao = 'BACKLOG' AND MONTH(data_instalacao) = $mAtual");
       $linhasmbklg = mysqli_fetch_assoc($somabklg);
       $somabk = $linhasmbklg['ponto_Bko'];
@@ -200,7 +224,11 @@
       };
 
       $geral = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND MONTH(data_instalacao) = $mAtual");
+      $geralTv = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND MONTH(data_instalacao) = $mAtual AND tv != 'NULL'");
+      $geralMov = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND MONTH(data_instalacao) = $mAtual AND movel != 'NULL'");
       $ttGeral = mysqli_num_rows($geral);
+      $ttGeralTv = mysqli_num_rows($geralTv);
+      $ttGeralMov = mysqli_num_rows($geralMov);
 
 
       echo "<script type=\"text/javascript\" src=\"https://www.gstatic.com/charts/loader.js\"></script>
@@ -282,11 +310,11 @@
 
 
       echo "<div class=\"btn-group\" role=\"group\">";
-      echo "<button type=\"button\" class=\"btn btn-outline-primary\" onclick=\"mAtualVsql(1)\">Geral <span class=\"badge badge-primary\">$ttGeral</span></button>";
-      echo "<button type=\"button\" class=\"btn btn-outline-secondary\" onclick=\"mAtualVsql(2)\")>Ativos <span class=\"badge badge-secondary\">$ttAtivo</span></button>";
-      echo "<button type=\"button\" class=\"btn btn-outline-success\" onclick=\"mAtualVsql(3)\">Aprovados <span class=\"badge badge-success\">$ttAprovado</span></button>";
-      echo "<button type=\"button\" class=\"btn btn-outline-danger\" onclick=\"mAtualVsql(4)\">Cancelado - Comercial <span class=\"badge badge-danger\">$ttCancelado</span></button>";
-      echo "<button type=\"button\" class=\"btn btn-outline-dark\" onclick=\"mAtualVsql(5)\">BackLog <span class=\"badge badge-dark\">$ttbklg</span></button>";
+      echo "<button type=\"button\" class=\"btn btn-outline-primary\" onclick=\"mAtualVsql(1)\">Geral <span class=\"badge badge-primary\">$ttGeral</span><br><span style=\"font-size: 12px;\">T <span class=\"badge badge-primary\">$ttGeralTv</span> M <span class=\"badge badge-primary\">$ttGeralMov</span></span></button>";
+      echo "<button type=\"button\" class=\"btn btn-outline-secondary\" onclick=\"mAtualVsql(2)\")>Ativos <span class=\"badge badge-secondary\">$ttAtivo</span><br><span style=\"font-size: 12px;\">T <span class=\"badge badge-secondary\">$ttAtivoTv</span> M <span class=\"badge badge-secondary\">$ttAtivoMov</span></span></button>";
+      echo "<button type=\"button\" class=\"btn btn-outline-success\" onclick=\"mAtualVsql(3)\">Aprovados <span class=\"badge badge-success\">$ttAprovado</span><br><span style=\"font-size: 12px;\">T <span class=\"badge badge-success\">$ttAprovadoTv</span> M <span class=\"badge badge-success\">$ttAprovadoMov</span></span></button>";
+      echo "<button type=\"button\" class=\"btn btn-outline-danger\" onclick=\"mAtualVsql(4)\">Comercial <span class=\"badge badge-danger\">$ttCancelado</span><br><span style=\"font-size: 12px;\">T <span class=\"badge badge-danger\">$ttCanceladoTv</span> M <span class=\"badge badge-danger\">$ttCanceladoMov</span></span></button>";
+      echo "<button type=\"button\" class=\"btn btn-outline-dark\" onclick=\"mAtualVsql(5)\">BackLog <span class=\"badge badge-dark\">$ttbklg</span><br><span style=\"font-size: 12px;\">T <span class=\"badge badge-dark\">$ttbklgTv</span> M <span class=\"badge badge-dark\">$ttbklgMov</span></span></button>";
 
 
       echo "<div style=\"margin-left: 30px; \" id=\"extraF\">";
@@ -883,8 +911,14 @@ $("#vendasDivp2").html('<?php   $mAtual = date("m");
       $mAtual = date("m",strtotime('-1 months', strtotime(date('m'))));
       $operador = $dados["id"];
 
-      $ativo = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND situacao = 'ATIVO' AND MONTH(data_instalacao) = $mAtual");
-      $ttAtivo = mysqli_num_rows($ativo);
+      $ativoP = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND situacao = 'ATIVO' AND MONTH(data_instalacao) = $mAtual");
+      $ativoPTv = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND situacao = 'ATIVO' AND MONTH(data_instalacao) = $mAtual AND tv != 'NULL'");
+      $ativoPMov = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND situacao = 'ATIVO' AND MONTH(data_instalacao) = $mAtual AND movel != 'NULL'");
+      $ttAtivoP = mysqli_num_rows($ativoP);
+      $ttAtivoPTv = mysqli_num_rows($ativoPTv);
+      $ttAtivoPMov = mysqli_num_rows($ativoPMov);
+
+
       $somaAtivo = mysqli_query($connect, "SELECT SUM(ponto) AS ponto_Ativo FROM proposta WHERE situacao = 'ATIVO' AND MONTH(data_instalacao) = $mAtual");
       $linhasmAtv = mysqli_fetch_assoc($somaAtivo);
       $somaAtv = $linhasmAtv['ponto_Ativo'];
@@ -900,8 +934,14 @@ $("#vendasDivp2").html('<?php   $mAtual = date("m");
       };
 
 
-      $aprovado = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND situacao = 'APROVADO' AND MONTH(data_instalacao) = $mAtual");
-      $ttAprovado = mysqli_num_rows($aprovado);
+      $aprovadoP = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND situacao = 'APROVADO' AND MONTH(data_instalacao) = $mAtual");
+      $aprovadoPTv = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND situacao = 'APROVADO' AND MONTH(data_instalacao) = $mAtual AND tv != 'NULL'");
+      $aprovadoPMov = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND situacao = 'APROVADO' AND MONTH(data_instalacao) = $mAtual AND movel != 'NULL'");
+      $ttAprovadoP = mysqli_num_rows($aprovadoP);
+      $ttAprovadoPTv = mysqli_num_rows($aprovadoPTv);
+      $ttAprovadoPMov = mysqli_num_rows($aprovadoPMov);
+
+
       $somaAprovado = mysqli_query($connect, "SELECT SUM(ponto) AS ponto_Aprovado FROM proposta WHERE situacao = 'APROVADO' AND MONTH(data_instalacao) = $mAtual");
       $linhasmApvd = mysqli_fetch_assoc($somaAprovado);
       $somaApvd = $linhasmApvd['ponto_Aprovado'];
@@ -917,8 +957,14 @@ $("#vendasDivp2").html('<?php   $mAtual = date("m");
       };
 
 
-      $cancelado = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND situacao = 'COMERCIAL' AND MONTH(data_instalacao) = $mAtual");
-      $ttCancelado = mysqli_num_rows($cancelado);
+      $canceladoP = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND situacao = 'COMERCIAL' AND MONTH(data_instalacao) = $mAtual");
+      $canceladoPTv = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND situacao = 'COMERCIAL' AND MONTH(data_instalacao) = $mAtual AND tv != 'NULL'");
+      $canceladoPMov = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND situacao = 'COMERCIAL' AND MONTH(data_instalacao) = $mAtual AND movel != 'NULL'");
+      $ttCanceladoP = mysqli_num_rows($canceladoP);
+      $ttCanceladoPTv = mysqli_num_rows($canceladoPTv);
+      $ttCanceladoPMov = mysqli_num_rows($canceladoPMov);
+
+
       $somaCancelado = mysqli_query($connect, "SELECT SUM(ponto) AS ponto_Cancel FROM proposta WHERE situacao = 'COMERCIAL' AND MONTH(data_instalacao) = $mAtual");
       $linhasmCanc = mysqli_fetch_assoc($somaCancelado);
       $somaCancel = $linhasmCanc['ponto_Cancel'];
@@ -933,8 +979,14 @@ $("#vendasDivp2").html('<?php   $mAtual = date("m");
           $somaCancelM = 0;
       };
 
-      $bklg = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND situacao = 'BACKLOG' AND MONTH(data_instalacao) = $mAtual");
-      $ttbklg = mysqli_num_rows($bklg);
+      $bklgP = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND situacao = 'BACKLOG' AND MONTH(data_instalacao) = $mAtual");
+      $bklgPTv = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND situacao = 'BACKLOG' AND MONTH(data_instalacao) = $mAtual AND tv != 'NULL'");
+      $bklgPMov = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND situacao = 'BACKLOG' AND MONTH(data_instalacao) = $mAtual AND movel != 'NULL'");
+      $ttbklgP = mysqli_num_rows($bklgP);
+      $ttbklgPTv = mysqli_num_rows($bklgPTv);
+      $ttbklgPMov = mysqli_num_rows($bklgPMov);
+
+
       $somabklg = mysqli_query($connect, "SELECT SUM(ponto) AS ponto_Bko FROM proposta WHERE situacao = 'BACKLOG' AND MONTH(data_instalacao) = $mAtual");
       $linhasmbklg = mysqli_fetch_assoc($somabklg);
       $somabk = $linhasmbklg['ponto_Bko'];
@@ -949,8 +1001,12 @@ $("#vendasDivp2").html('<?php   $mAtual = date("m");
           $somabkM = 0;
       };
 
-      $geral = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND MONTH(data_instalacao) = $mAtual");
-      $ttGeral = mysqli_num_rows($geral);
+      $geralP = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND MONTH(data_instalacao) = $mAtual");
+      $geralPTv = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND MONTH(data_instalacao) = $mAtual AND tv != 'NULL'");
+      $geralPMov = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND MONTH(data_instalacao) = $mAtual AND movel != 'NULL'");
+      $ttGeralP = mysqli_num_rows($geralP);
+      $ttGeralPTv = mysqli_num_rows($geralPTv);
+      $ttGeralPMov = mysqli_num_rows($geralPMov);
 
 
       echo "<script type=\"text/javascript\" src=\"https://www.gstatic.com/charts/loader.js\"></script>
@@ -1032,11 +1088,11 @@ $("#vendasDivp2").html('<?php   $mAtual = date("m");
 
 
       echo "<div class=\"btn-group\" role=\"group\">";
-      echo "<button type=\"button\" class=\"btn btn-outline-primary\" onclick=\"mPassadoVsql(1)\">Geral <span class=\"badge badge-primary\">$ttGeral</span></button>";
-      echo "<button type=\"button\" class=\"btn btn-outline-secondary\" onclick=\"mPassadoVsql(2)\")>Ativos <span class=\"badge badge-secondary\">$ttAtivo</span></button>";
-      echo "<button type=\"button\" class=\"btn btn-outline-success\" onclick=\"mPassadoVsql(3)\">Aprovados <span class=\"badge badge-success\">$ttAprovado</span></button>";
-      echo "<button type=\"button\" class=\"btn btn-outline-danger\" onclick=\"mPassadoVsql(4)\">Cancelado - Comercial <span class=\"badge badge-danger\">$ttCancelado</span></button>";
-      echo "<button type=\"button\" class=\"btn btn-outline-dark\" onclick=\"mPassadoVsql(5)\">BackLog <span class=\"badge badge-dark\">$ttbklg</span></button>";
+      echo "<button type=\"button\" class=\"btn btn-outline-primary\" onclick=\"mPassadoVsql(1)\">Geral <span class=\"badge badge-primary\">$ttGeralP</span><br><span style=\"font-size: 12px;\">T <span class=\"badge badge-primary\">$ttGeralPTv</span> M <span class=\"badge badge-primary\">$ttGeralPMov</span></span></button>";
+      echo "<button type=\"button\" class=\"btn btn-outline-secondary\" onclick=\"mPassadoVsql(2)\")>Ativos <span class=\"badge badge-secondary\">$ttAtivoP</span><br><span style=\"font-size: 12px;\">T <span class=\"badge badge-secondary\">$ttAtivoPTv</span> M <span class=\"badge badge-secondary\">$ttAtivoPMov</span></span></button>";
+      echo "<button type=\"button\" class=\"btn btn-outline-success\" onclick=\"mPassadoVsql(3)\">Aprovados <span class=\"badge badge-success\">$ttAprovadoP</span><br><span style=\"font-size: 12px;\">T <span class=\"badge badge-success\">$ttAprovadoPTv</span> M <span class=\"badge badge-success\">$ttAprovadoPMov</span></span></button>";
+      echo "<button type=\"button\" class=\"btn btn-outline-danger\" onclick=\"mPassadoVsql(4)\">Comercial <span class=\"badge badge-danger\">$ttCanceladoP</span><br><span style=\"font-size: 12px;\">T <span class=\"badge badge-danger\">$ttCanceladoPTv</span> M <span class=\"badge badge-danger\">$ttCanceladoPMov</span></span></button>";
+      echo "<button type=\"button\" class=\"btn btn-outline-dark\" onclick=\"mPassadoVsql(5)\">BackLog <span class=\"badge badge-dark\">$ttbklgP</span><br><span style=\"font-size: 12px;\">T <span class=\"badge badge-dark\">$ttbklgPTv</span> M <span class=\"badge badge-dark\">$ttbklgPMov</span></span></button>";
 
 
 
@@ -1622,8 +1678,14 @@ $("#vendasDivp2").html('<?php   $mAtual = date("m", strtotime('-1 months', strto
       $mAtual = date("m",strtotime('-2 months', strtotime(date('m'))));
       $operador = $dados["id"];
 
-      $ativo = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND situacao = 'ATIVO' AND MONTH(data_instalacao) = $mAtual");
-      $ttAtivo = mysqli_num_rows($ativo);
+      $ativoAP = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND situacao = 'ATIVO' AND MONTH(data_instalacao) = $mAtual");
+      $ativoAPTv = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND situacao = 'ATIVO' AND MONTH(data_instalacao) = $mAtual AND tv != 'NULL'");
+      $ativoAPMov = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND situacao = 'ATIVO' AND MONTH(data_instalacao) = $mAtual AND movel != 'NULL'");
+      $ttAtivoAP = mysqli_num_rows($ativoAP);
+      $ttAtivoAPTv = mysqli_num_rows($ativoAPTv);
+      $ttAtivoAPMov = mysqli_num_rows($ativoAPMov);
+
+
       $somaAtivo = mysqli_query($connect, "SELECT SUM(ponto) AS ponto_Ativo FROM proposta WHERE situacao = 'ATIVO' AND MONTH(data_instalacao) = $mAtual");
       $linhasmAtv = mysqli_fetch_assoc($somaAtivo);
       $somaAtv = $linhasmAtv['ponto_Ativo'];
@@ -1639,8 +1701,14 @@ $("#vendasDivp2").html('<?php   $mAtual = date("m", strtotime('-1 months', strto
       };
 
 
-      $aprovado = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND situacao = 'APROVADO' AND MONTH(data_instalacao) = $mAtual");
-      $ttAprovado = mysqli_num_rows($aprovado);
+      $aprovadoAP = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND situacao = 'APROVADO' AND MONTH(data_instalacao) = $mAtual");
+      $aprovadoAPTv = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND situacao = 'APROVADO' AND MONTH(data_instalacao) = $mAtual AND tv != 'NULL'");
+      $aprovadoAPMov = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND situacao = 'APROVADO' AND MONTH(data_instalacao) = $mAtual AND movel != 'NULL'");
+      $ttAprovadoAP = mysqli_num_rows($aprovadoAP);
+      $ttAprovadoAPTv = mysqli_num_rows($aprovadoAPTv);
+      $ttAprovadoAPMov = mysqli_num_rows($aprovadoAPMov);
+
+
       $somaAprovado = mysqli_query($connect, "SELECT SUM(ponto) AS ponto_Aprovado FROM proposta WHERE situacao = 'APROVADO' AND MONTH(data_instalacao) = $mAtual");
       $linhasmApvd = mysqli_fetch_assoc($somaAprovado);
       $somaApvd = $linhasmApvd['ponto_Aprovado'];
@@ -1656,8 +1724,14 @@ $("#vendasDivp2").html('<?php   $mAtual = date("m", strtotime('-1 months', strto
       };
 
 
-      $cancelado = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND situacao = 'COMERCIAL' AND MONTH(data_instalacao) = $mAtual");
-      $ttCancelado = mysqli_num_rows($cancelado);
+      $canceladoAP = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND situacao = 'COMERCIAL' AND MONTH(data_instalacao) = $mAtual");
+      $canceladoAPTv = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND situacao = 'COMERCIAL' AND MONTH(data_instalacao) = $mAtual AND tv != 'NULL'");
+      $canceladoAPMov = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND situacao = 'COMERCIAL' AND MONTH(data_instalacao) = $mAtual AND movel != 'NULL'");
+      $ttCanceladoAP = mysqli_num_rows($canceladoAP);
+      $ttCanceladoAPTv = mysqli_num_rows($canceladoAPTv);
+      $ttCanceladoAPMov = mysqli_num_rows($canceladoAPMov);
+
+
       $somaCancelado = mysqli_query($connect, "SELECT SUM(ponto) AS ponto_Cancel FROM proposta WHERE situacao = 'COMERCIAL' AND MONTH(data_instalacao) = $mAtual");
       $linhasmCanc = mysqli_fetch_assoc($somaCancelado);
       $somaCancel = $linhasmCanc['ponto_Cancel'];
@@ -1672,8 +1746,14 @@ $("#vendasDivp2").html('<?php   $mAtual = date("m", strtotime('-1 months', strto
           $somaCancelM = 0;
       };
 
-      $bklg = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND situacao = 'BACKLOG' AND MONTH(data_instalacao) = $mAtual");
-      $ttbklg = mysqli_num_rows($bklg);
+      $bklgAP = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND situacao = 'BACKLOG' AND MONTH(data_instalacao) = $mAtual");
+      $bklgAPTv = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND situacao = 'BACKLOG' AND MONTH(data_instalacao) = $mAtual AND tv != 'NULL'");
+      $bklgAPMov = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND situacao = 'BACKLOG' AND MONTH(data_instalacao) = $mAtual AND movel != 'NULL'");
+      $ttbklgAP = mysqli_num_rows($bklgAP);
+      $ttbklgAPTv = mysqli_num_rows($bklgAPTv);
+      $ttbklgAPMov = mysqli_num_rows($bklgAPMov);
+
+
       $somabklg = mysqli_query($connect, "SELECT SUM(ponto) AS ponto_Bko FROM proposta WHERE situacao = 'BACKLOG' AND MONTH(data_instalacao) = $mAtual");
       $linhasmbklg = mysqli_fetch_assoc($somabklg);
       $somabk = $linhasmbklg['ponto_Bko'];
@@ -1688,8 +1768,12 @@ $("#vendasDivp2").html('<?php   $mAtual = date("m", strtotime('-1 months', strto
           $somabkM = 0;
       };
 
-      $geral = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND MONTH(data_instalacao) = $mAtual");
-      $ttGeral = mysqli_num_rows($geral);
+      $geralAP = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND MONTH(data_instalacao) = $mAtual");
+      $geralAPTv = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND MONTH(data_instalacao) = $mAtual AND tv != 'NULL'");
+      $geralAPMov = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $operador AND MONTH(data_instalacao) = $mAtual AND movel != 'NULL'");
+      $ttGeralAP = mysqli_num_rows($geralAP);
+      $ttGeralAPTv = mysqli_num_rows($geralAPTv);
+      $ttGeralAPMov = mysqli_num_rows($geralAPMov);
 
 
       echo "<script type=\"text/javascript\" src=\"https://www.gstatic.com/charts/loader.js\"></script>
@@ -1771,11 +1855,11 @@ $("#vendasDivp2").html('<?php   $mAtual = date("m", strtotime('-1 months', strto
 
 
       echo "<div class=\"btn-group\" role=\"group\">";
-      echo "<button type=\"button\" class=\"btn btn-outline-primary\" onclick=\"mAntepassadoVsql(1)\">Geral <span class=\"badge badge-primary\">$ttGeral</span></button>";
-      echo "<button type=\"button\" class=\"btn btn-outline-secondary\" onclick=\"mAntepassadoVsql(2)\")>Ativos <span class=\"badge badge-secondary\">$ttAtivo</span></button>";
-      echo "<button type=\"button\" class=\"btn btn-outline-success\" onclick=\"mAntepassadoVsql(3)\">Aprovados <span class=\"badge badge-success\">$ttAprovado</span></button>";
-      echo "<button type=\"button\" class=\"btn btn-outline-danger\" onclick=\"mAntepassadoVsql(4)\">Cancelado - Comercial <span class=\"badge badge-danger\">$ttCancelado</span></button>";
-      echo "<button type=\"button\" class=\"btn btn-outline-dark\" onclick=\"mAntepassadoVsql(5)\">BackLog <span class=\"badge badge-dark\">$ttbklg</span></button>";
+      echo "<button type=\"button\" class=\"btn btn-outline-primary\" onclick=\"mAntepassadoVsql(1)\">Geral <span class=\"badge badge-primary\">$ttGeralAP</span><br><span style=\"font-size: 12px;\">T <span class=\"badge badge-primary\">$ttGeralAPTv</span> M <span class=\"badge badge-primary\">$ttGeralAPMov</span></span></button>";
+      echo "<button type=\"button\" class=\"btn btn-outline-secondary\" onclick=\"mAntepassadoVsql(2)\")>Ativos <span class=\"badge badge-secondary\">$ttAtivoAP</span><br><span style=\"font-size: 12px;\">T <span class=\"badge badge-secondary\">$ttAtivoAPTv</span> M <span class=\"badge badge-secondary\">$ttAtivoAPMov</span></span></button>";
+      echo "<button type=\"button\" class=\"btn btn-outline-success\" onclick=\"mAntepassadoVsql(3)\">Aprovados <span class=\"badge badge-success\">$ttAprovadoAP</span><br><span style=\"font-size: 12px;\">T <span class=\"badge badge-success\">$ttAprovadoAPTv</span> M <span class=\"badge badge-success\">$ttAprovadoAPMov</span></span></button>";
+      echo "<button type=\"button\" class=\"btn btn-outline-danger\" onclick=\"mAntepassadoVsql(4)\">Comercial <span class=\"badge badge-danger\">$ttCanceladoAP</span><br><span style=\"font-size: 12px;\">T <span class=\"badge badge-danger\">$ttCanceladoAPTv</span> M <span class=\"badge badge-danger\">$ttCanceladoAPMov</span></span></button>";
+      echo "<button type=\"button\" class=\"btn btn-outline-dark\" onclick=\"mAntepassadoVsql(5)\">BackLog <span class=\"badge badge-dark\">$ttbklgAP</span><br><span style=\"font-size: 12px;\">T <span class=\"badge badge-dark\">$ttbklgAPTv</span> M <span class=\"badge badge-dark\">$ttbklgAPMov</span></span></button>";
 
 
 

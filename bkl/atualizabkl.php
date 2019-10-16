@@ -11,16 +11,17 @@ endif;
 
 //Dados
 $var = $_POST['sitVenda'];
+$cham = $_POST['chmdinst'];
 $idVenda = $_POST['idVenda'];
 
 
-mysqli_query($connect, "UPDATE proposta SET situacao = '$var', id_bkoPend = 0 WHERE id = $idVenda");
+mysqli_query($connect, "UPDATE proposta SET situacao = '$var', chamadoinst = '$cham',id_bkoPend = 0 WHERE id = $idVenda");
 
 
 
 
 
-echo json_encode(array('retorno' => "Retornou: Proposta atualizada"));
+echo json_encode(array('retorno' => "Retornou: Alterado com sucesso!"));
 
 
  ?>

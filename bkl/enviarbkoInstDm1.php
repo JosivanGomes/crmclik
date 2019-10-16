@@ -17,16 +17,8 @@
   $dados = mysqli_fetch_array($resultado);
 
   $proposta = $_POST['proposta'];
-  $status = mysqli_query($connect, "SELECT * FROM proposta WHERE id = $proposta");
-  $dadoSt = mysqli_fetch_array($status);
 
-  $situacao = $dadoSt['situacao'];
-  if ($situacao = "BACKLOG"):
-    $sql = "UPDATE proposta SET situacao = 'TRATAMENTO BACKLOG', id_bkoPend = $id WHERE id = $proposta";
-  else:
-    $sql = "UPDATE proposta SET situacao = 'TRATAMENTO DIVERGENTE', id_bkoPend = $id WHERE id = $proposta";
-  endif;
-
+  $sql = "UPDATE proposta SET situacao = 'TRATAMENTO D -1', id_bkoPend = $id WHERE id = $proposta";
   mysqli_query($connect, $sql);
 
   echo json_encode(array('retorno' => "Proposta selecionada para tratamento"));

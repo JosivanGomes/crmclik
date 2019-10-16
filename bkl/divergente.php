@@ -127,8 +127,10 @@
 
      echo "<h4>Pessoal:</h4>";
 
+
      $contrato = $linha["contrato"];
      if(mysqli_num_rows($sql)>0):
+       echo "<h6>Aprovado Divergente: </h6>";
        echo "<div class=\"table-responsive-xl\">";
        echo "<table class=\"table table-hover text-center text-truncate\">";
        echo "<thead class=\"thead-dark\">";
@@ -340,7 +342,223 @@
      endif;
 
 
+     $sql = mysqli_query($con, "SELECT * FROM proposta WHERE id_bkoPend = '{$vendedor}' AND situacao = 'TRATAMENTO BACKLOG'") or print mysql_error();
+     $linha = mysqli_fetch_array($sql);
 
+
+
+     $contrato = $linha["contrato"];
+     if(mysqli_num_rows($sql)>0):
+       echo "<h6>BACKLOG: </h6>";
+       echo "<div class=\"table-responsive-xl\">";
+       echo "<table class=\"table table-hover text-center text-truncate\">";
+       echo "<thead class=\"thead-dark\">";
+       echo "<tr>";
+
+       echo   "<th scope=\"col\"></th>";
+       echo   "<th scope=\"col\">Contrato</th>";
+       echo   "<th scope=\"col\">Sit Contrato</th>";
+       echo   "<th scope=\"col\">Status</th>";
+       echo   "<th scope=\"col\">Turno</th>";
+       echo   "<th scope=\"col\">Data Instalação</th>";
+       echo   "<th scope=\"col\">Vendedor</th>";
+       echo   "<th scope=\"col\">Supervisor</th>";
+       echo   "<th scope=\"col\">Cidade</th>";
+       echo   "<th scope=\"col\">Data Venda</th>";
+       echo   "<th scope=\"col\">CPF Cliente</th>";
+       echo   "<th scope=\"col\">Cliente</th>";
+       echo   "<th scope=\"col\">Fone1</th>";
+       echo   "<th scope=\"col\">Fone2</th>";
+       echo   "<th scope=\"col\">Tv</th>";
+       echo   "<th scope=\"col\">Pt Adc Tv</th>";
+       echo   "<th scope=\"col\">Internet</th>";
+       echo   "<th scope=\"col\">Fone</th>";
+       echo   "<th scope=\"col\">Móvel</th>";
+       echo   "<th scope=\"col\">Valor</th>";
+
+       echo "</tr>";
+       echo "</thead>";
+
+       echo "<tbody>";
+       //Lembrete = tentar fazer uma nova tabela a cada ciclo
+       do {
+
+
+
+         $clienteCpf = $linha["cpf_cliente"];
+         $sqlC = mysqli_query($con, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
+         $linhaC = mysqli_fetch_array($sqlC);
+         $idVenda = $linha["id"];
+
+
+
+         $clienteCpf = $linha["cpf_cliente"];
+         $sqlC = mysqli_query($con, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
+         $linhaC = mysqli_fetch_array($sqlC);
+
+         $idVenda = $linha["id"];
+
+           echo   "<td>
+
+                      <button type=\"button\" class=\"btn btn-outline-primary\" onclick=\"finaliza$idVenda()\">Concluir</button>
+
+                  </td>";
+
+           $contrato = $linha["contrato"];
+           echo   "<td>$contrato</td>";
+
+           $contratoSit = $linha["sitctrt"];
+           echo   "<td>$contratoSit</td>";
+
+           $status = $linha["situacao"];
+           $obs = $linha["observacao"];
+           echo   "<td title=\"Obs: $obs\">$status</td>";
+
+           echo "<td>
+                 <select id=\"turno$idVenda\">
+                   <option></option>
+                   <option>Manha</option>
+                   <option>Tarde</option>
+                 </td>";
+
+           echo "<td>
+                  <input id=\"dtInstala$idVenda\" type=\"date\" style=\"font-size:13px\">
+                 </td>";
+
+           $idVendedor = $linha["id_vendedor"];
+           $sqlV = mysqli_query($con, "SELECT * FROM operador WHERE id = '{$idVendedor}'") or print mysql_error();
+           $linhaV = mysqli_fetch_array($sqlV);
+           $nmVend = $linhaV["login"];
+           echo   "<td>$nmVend</td>";
+
+           $idSuper = $linhaV["id_super"];
+           $sqlS = mysqli_query($con, "SELECT * FROM supervisor WHERE id = '{$idSuper}'") or print mysql_error();
+           $linhaS = mysqli_fetch_array($sqlS);
+           $nmSup = $linhaS["login"];
+           echo   "<td>$nmSup</td>";
+
+
+             $localCidade = $linhaC["cidade"];
+             echo   "<td>$localCidade</td>";
+
+
+           $dtVenda = $linha["data_venda"];
+           if(empty($dtVenda)):
+             echo   "<td>$dtVenda</td>";
+           else:
+             $newDate = date("d/m/Y", strtotime($dtVenda));
+             echo   "<td>$newDate</td>";
+           endif;
+
+
+           echo   "<td>$clienteCpf</td>";
+
+
+           $nmcliente = $linhaC["nome"];
+           echo   "<td>$nmcliente</td>";
+
+           $F1Cliente = $linhaC["telfixo"];
+           echo   "<td>$F1Cliente</td>";
+
+           $F2Cliente = $linhaC["telmovel"];
+           echo   "<td>$F2Cliente</td>";
+
+           $planoTv = $linha["tv"];
+           if ($planoTv == "NULL"):
+             echo   "<td></td>";
+           else:
+             echo "<td>$planoTv</td>";
+           endif;
+
+           $pontoTv = $linha["pt_adc_tv"];
+           if ($pontoTv == 0):
+             echo "<td></td>";
+           else:
+             echo   "<td>$pontoTv</td>";
+           endif;
+
+           $net = $linha["internet"];
+           if ($net == "NULL"):
+             echo "<td></td>";
+           else:
+             echo   "<td>$net</td>";
+           endif;
+
+           $fone = $linha["telefone"];
+           if ($fone == "NULL"):
+             echo "<td></td>";
+           else:
+             echo   "<td>$fone</td>";
+           endif;
+
+           $movel = $linha["movel"];
+           if ($movel == "NULL"):
+             echo "<td></td>";
+           else:
+             echo   "<td>$movel</td>";
+           endif;
+
+           $precoP = number_format($linha["preco"], 2, '.', '');
+             echo   "<td>R$ $precoP</td>";
+
+
+
+
+
+             $chamado = $linha["chamadoinst"];
+
+
+           echo "</tr>";
+
+           echo "<!-- Modal -->
+
+
+                <script>
+
+                var statusVenda$idVenda = document.getElementById('status$idVenda');
+
+                  function finaliza$idVenda(){
+
+
+                    $.ajax({
+                      url: 'atualizabklDiv.php',
+                      type: 'POST',
+                      data:{\"turnoVenda\" : turno$idVenda.value,
+                            \"instalacaoVenda\" : dtInstala$idVenda.value,
+                            \"idVenda\" : $idVenda
+                            },
+
+                      success: function(data) {
+                        console.log(data);
+                        data = $.parseJSON(data);
+                          alert(data.retorno);
+
+                          window.location.reload()
+                        }
+
+
+                      });
+
+
+                  }
+
+                </script>
+
+                ";
+
+
+
+
+
+
+       } while ($linha = mysqli_fetch_assoc($sql));
+       echo "</tbody>";
+
+       echo "</table>";
+       echo "</div>";
+     else:
+       echo "Sem dados";
+     endif;
 
 
 

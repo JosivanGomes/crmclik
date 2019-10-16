@@ -14,49 +14,31 @@
     if(empty($login) or empty($senha)):
       $erros[] = "<li> Os campos Login e/ou Senha não foram preenchidos!</li>";
     else:
-      $sql = "SELECT login FROM operador WHERE login = '$login'";
+      $sql = "SELECT login FROM supervisor WHERE login = '$login'";
       $resultado = mysqli_query($connect, $sql);
 
       if(mysqli_num_rows($resultado) > 0):
         $senha = md5($senha);
-        $sql = "SELECT * FROM operador WHERE login = '$login' and senha = '$senha'";
+        $sql = "SELECT * FROM supervisor WHERE login = '$login' and senha = '$senha'";
         $resultado = mysqli_query($connect, $sql);
 
         if(mysqli_num_rows($resultado) == 1):
           $dados = mysqli_fetch_array($resultado);
-          if($dados['cargo'] == "VENDEDOR"):
-
-            $_SESSION['logado'] = true;
-            $_SESSION['id_usuario'] = $dados['id'];
-
-            header('Location: operacao/operacao.php');
-          elseif ($dados['cargo'] == "BACKOFFICE"):
-            $_SESSION['logado'] = true;
-            $_SESSION['id_usuario'] = $dados['id'];
-
-            header('Location: bko/bko.php');
-
-            elseif ($dados['cargo'] == "BACKL"):
+          if ($dados['cargo'] == "SUPER OP"):
               $_SESSION['logado'] = true;
               $_SESSION['id_usuario'] = $dados['id'];
 
-                header('Location: bkl/bkl.php');
-
-          elseif ($dados['cargo'] == "SUPER"):
-            $_SESSION['logado'] = true;
-            $_SESSION['id_usuario'] = $dados['id'];
-
-              header('Location: super/super.php');
+                header('Location: super/super.php');
+          else:
+            $erros[] = "<li>Usuário e Senha não conferem!</li>";
           endif;
-        else:
-          $erros[] = "<li>Usuário e Senha não conferem!</li>";
-        endif;
 
       else:
         $erros[] = "<li>Usuário não cadastrado!</li>";
       endif;
 
     endif;
+  endif;
 
   endif;
 ?>
@@ -110,7 +92,7 @@
     <nav class="navbar navbar-expand" style="position: fixed; bottom: 0; right: 0;">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link" href="loginSuper.php">SUPERVISÃO</a>
+          <a class="nav-link" href="index.php">OPERAÇÃO</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="loginGerencia.php">GERÊNCIA</a>

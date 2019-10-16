@@ -136,6 +136,7 @@
          echo   "<th scope=\"col\">Data Instalação</th>";
          echo   "<th scope=\"col\">Turno</th>";
          echo   "<th scope=\"col\">Contrato</th>";
+         echo   "<th scope=\"col\">Inst Chamado</th>";
          echo   "<th scope=\"col\">Vendedor</th>";
          echo   "<th scope=\"col\">Supervisor</th>";
          echo   "<th scope=\"col\">Cidade</th>";
@@ -202,6 +203,8 @@
 
                   $contrato = $linha["contrato"];
                   echo   "<td>$contrato</td>";
+
+                  echo "<td><button type=\"button\" class=\"btn btn-outline-primary\" data-toggle=\"modal\" data-target=\"#modal$idVenda\">Ver/Atualizar</button></td>";
 
                $idVendedor = $linha["id_vendedor"];
                $sqlV = mysqli_query($con, "SELECT * FROM operador WHERE id = '{$idVendedor}'") or print mysql_error();
@@ -284,7 +287,8 @@
 
 
                $chamado = $linha["chamadoinst"];
-
+               $dia = date("d/m/Y");
+               $operador = $dados["login"];
 
              echo "</tr>";
 
@@ -313,14 +317,23 @@
                   <script>
 
                   var statusVenda$idVenda = document.getElementById('status$idVenda');
+                  var chamadoinst$idVenda = document.getElementById('chamadoinst$idVenda');
+
 
                     function finaliza$idVenda(){
+                      var statusFim$idVenda = statusVenda$idVenda.value;
+                      var chamadoFim$idVenda = chamadoinst$idVenda.value;
+                      var texto = \"$chamado\";
+                      var texto = texto + chamadoFim$idVenda + \"<br>--> dia: $dia BKO: $operador <br><br>\";
+
+
 
 
                       $.ajax({
                         url: 'atualizabkl.php',
                         type: 'POST',
-                        data:{\"sitVenda\" : statusVenda$idVenda.value,
+                        data:{\"sitVenda\" : statusFim$idVenda,
+                              \"chmdinst\" : texto,
                               \"idVenda\" : $idVenda
                               },
 
