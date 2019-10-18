@@ -357,7 +357,7 @@
         $vendedor = $dados["id"];
         $nmvendedor = $dados["login"];
         $con = mysqli_connect("localhost", "root", "", "crmclik");
-        $sql = mysqli_query($con, "SELECT * FROM proposta WHERE situacao = 'SEM CONTATO' OR situacao = 'RETORNO VENDEDOR' OR situacao = 'EM TRATAMENTO' OR situacao = 'CHECK OK' OR situacao = 'CADASTRO OK' and id_vendedor = '{$vendedor}'") or print mysql_error();
+        $sql = mysqli_query($con, "SELECT * FROM proposta WHERE id_vendedor = '{$vendedor}' AND situacao = 'SEM CONTATO' OR id_vendedor = '{$vendedor}' AND situacao = 'RETORNO VENDEDOR' OR id_vendedor = '{$vendedor}' AND situacao = 'EM TRATAMENTO' OR id_vendedor = '{$vendedor}' AND situacao = 'CHECK OK' OR id_vendedor = '{$vendedor}' AND situacao = 'CADASTRO OK'") or print mysql_error();
         $linha = mysqli_fetch_array($sql);
 
 

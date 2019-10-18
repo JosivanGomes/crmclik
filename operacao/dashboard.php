@@ -141,14 +141,14 @@
       $ttAtivoMov = mysqli_num_rows($ativoMov);
 
 
-      $somaAtivo = mysqli_query($connect, "SELECT SUM(ponto) AS ponto_Ativo FROM proposta WHERE situacao = 'ATIVO' AND MONTH(data_instalacao) = $mAtual");
+      $somaAtivo = mysqli_query($connect, "SELECT SUM(ponto) AS ponto_Ativo FROM proposta WHERE id_vendedor = $operador AND situacao = 'ATIVO' AND MONTH(data_instalacao) = $mAtual");
       $linhasmAtv = mysqli_fetch_assoc($somaAtivo);
       $somaAtv = $linhasmAtv['ponto_Ativo'];
       if (empty($somaAtv)) {
           $somaAtv = 0;
       };
 
-      $somaAtivoM = mysqli_query($connect, "SELECT SUM(ponto) + SUM(pontoM) AS ponto_AtivoM FROM proposta WHERE situacao = 'ATIVO' AND MONTH(data_instalacao) = $mAtual");
+      $somaAtivoM = mysqli_query($connect, "SELECT SUM(ponto) + SUM(pontoM) AS ponto_AtivoM FROM proposta WHERE id_vendedor = $operador AND situacao = 'ATIVO' AND MONTH(data_instalacao) = $mAtual");
       $linhasmAtvM = mysqli_fetch_assoc($somaAtivoM);
       $somaAtvM = $linhasmAtvM['ponto_AtivoM'];
       if (empty($somaAtvM)) {
@@ -164,14 +164,14 @@
       $ttAprovadoMov = mysqli_num_rows($aprovadoMov);
 
 
-      $somaAprovado = mysqli_query($connect, "SELECT SUM(ponto) AS ponto_Aprovado FROM proposta WHERE situacao = 'APROVADO' AND MONTH(data_instalacao) = $mAtual");
+      $somaAprovado = mysqli_query($connect, "SELECT SUM(ponto) AS ponto_Aprovado FROM proposta WHERE id_vendedor = $operador AND situacao = 'APROVADO' AND MONTH(data_instalacao) = $mAtual");
       $linhasmApvd = mysqli_fetch_assoc($somaAprovado);
       $somaApvd = $linhasmApvd['ponto_Aprovado'];
       if (empty($somaApvd)) {
           $somaApvd = 0;
       };
 
-      $somaAprovadoM = mysqli_query($connect, "SELECT SUM(ponto) + SUM(pontoM) AS ponto_AprovadoM FROM proposta WHERE situacao = 'APROVADO' AND MONTH(data_instalacao) = $mAtual");
+      $somaAprovadoM = mysqli_query($connect, "SELECT SUM(ponto) + SUM(pontoM) AS ponto_AprovadoM FROM proposta WHERE id_vendedor = $operador AND situacao = 'APROVADO' AND MONTH(data_instalacao) = $mAtual");
       $linhasmApvdM = mysqli_fetch_assoc($somaAprovadoM);
       $somaApvdM = $linhasmApvdM['ponto_AprovadoM'];
       if (empty($somaApvdM)) {
@@ -187,14 +187,14 @@
       $ttCanceladoMov = mysqli_num_rows($canceladoMov);
 
 
-      $somaCancelado = mysqli_query($connect, "SELECT SUM(ponto) AS ponto_Cancel FROM proposta WHERE situacao = 'COMERCIAL' AND MONTH(data_instalacao) = $mAtual");
+      $somaCancelado = mysqli_query($connect, "SELECT SUM(ponto) AS ponto_Cancel FROM proposta WHERE id_vendedor = $operador AND situacao = 'COMERCIAL' AND MONTH(data_instalacao) = $mAtual");
       $linhasmCanc = mysqli_fetch_assoc($somaCancelado);
       $somaCancel = $linhasmCanc['ponto_Cancel'];
       if (empty($somaCancel)) {
           $somaCancel = 0;
       };
 
-      $somaCanceladoM = mysqli_query($connect, "SELECT SUM(ponto) + SUM(pontoM) AS ponto_CancelM FROM proposta WHERE situacao = 'COMERCIAL' AND MONTH(data_instalacao) = $mAtual");
+      $somaCanceladoM = mysqli_query($connect, "SELECT SUM(ponto) + SUM(pontoM) AS ponto_CancelM FROM proposta WHERE id_vendedor = $operador AND situacao = 'COMERCIAL' AND MONTH(data_instalacao) = $mAtual");
       $linhasmCancM = mysqli_fetch_assoc($somaCanceladoM);
       $somaCancelM = $linhasmCancM['ponto_CancelM'];
       if (empty($somaCancelM)) {
@@ -209,14 +209,14 @@
       $ttbklgMov = mysqli_num_rows($bklgMov);
 
 
-      $somabklg = mysqli_query($connect, "SELECT SUM(ponto) AS ponto_Bko FROM proposta WHERE situacao = 'BACKLOG' AND MONTH(data_instalacao) = $mAtual");
+      $somabklg = mysqli_query($connect, "SELECT SUM(ponto) AS ponto_Bko FROM proposta WHERE id_vendedor = $operador AND situacao = 'BACKLOG' AND MONTH(data_instalacao) = $mAtual");
       $linhasmbklg = mysqli_fetch_assoc($somabklg);
       $somabk = $linhasmbklg['ponto_Bko'];
       if (empty($somabk)) {
           $somabk = 0;
       };
 
-      $somabklgM = mysqli_query($connect, "SELECT SUM(ponto) + SUM(pontoM) AS ponto_BkoM FROM proposta WHERE situacao = 'BACKLOG' AND MONTH(data_instalacao) = $mAtual");
+      $somabklgM = mysqli_query($connect, "SELECT SUM(ponto) + SUM(pontoM) AS ponto_BkoM FROM proposta WHERE id_vendedor = $operador AND situacao = 'BACKLOG' AND MONTH(data_instalacao) = $mAtual");
       $linhasmbklgM = mysqli_fetch_assoc($somabklgM);
       $somabkM = $linhasmbklgM['ponto_BkoM'];
       if (empty($somabkM)) {
@@ -239,7 +239,7 @@
 
          function mAtual() {
           var data = new google.visualization.arrayToDataTable([
-             ['Move', 'Quantidade'],
+             ['Move', 'Pontos'],
              [\"Ativo\", $somaAtv],
 
              [\"Aprovado\", $somaApvd],
@@ -268,7 +268,7 @@
 
 
            var data = new google.visualization.arrayToDataTable([
-              ['Move', 'Quantidade'],
+              ['Move', 'Pontos'],
               [\"Ativo\", $somaAtvM],
 
               [\"Aprovado\", $somaApvdM],
@@ -1017,7 +1017,7 @@ $("#vendasDivp2").html('<?php   $mAtual = date("m");
 
          function passado() {
           var data = new google.visualization.arrayToDataTable([
-             ['Move', 'Quantidade'],
+             ['Move', 'Pontos'],
              [\"Ativo\", $somaAtv],
 
              [\"Aprovado\", $somaApvd],
@@ -1030,7 +1030,7 @@ $("#vendasDivp2").html('<?php   $mAtual = date("m");
              width: 450,
              legend: { position: 'none' },
              chart: {
-               title: 'Acompanhamento',
+               title: 'Pontos',
                subtitle: 'Mês: $myAtual' },
              axes: {
                x: {
@@ -1784,7 +1784,7 @@ $("#vendasDivp2").html('<?php   $mAtual = date("m", strtotime('-1 months', strto
 
          function antepassado() {
           var data = new google.visualization.arrayToDataTable([
-             ['Move', 'Quantidade'],
+             ['Move', 'Pontos'],
              [\"Ativo\", $somaAtv],
 
              [\"Aprovado\", $somaApvd],
@@ -1813,7 +1813,7 @@ $("#vendasDivp2").html('<?php   $mAtual = date("m", strtotime('-1 months', strto
 
 
            var data = new google.visualization.arrayToDataTable([
-              ['Move', 'Quantidade'],
+              ['Move', 'Pontos'],
               [\"Ativo\", $somaAtvM],
 
               [\"Aprovado\", $somaApvdM],
