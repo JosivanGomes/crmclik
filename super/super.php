@@ -59,7 +59,16 @@
        </a>
 
 
+       <a href="#">
+         <img src="img/agenda_icone.png" alt="Agenda" title="Agenda" class="rounded-circle" style="width: 30px; background-color: #f0f0f0;">
+       </a>
+
+       <a data-toggle="modal" data-target=".bd-example-modal-xl" href="#">
+         <img src="img/previsao.jpg" alt="Agenda" title="Agenda" class="rounded-circle" style="width: 30px; background-color: #f0f0f0;">
+       </a>
+
          <ul class="navbar-nav" style="margin-left: 430px">
+
 
            <li class="nav-item dropdown">
              <a class="nav-link" href="super.php">Home</a>
@@ -71,11 +80,10 @@
 
 
            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Operadores</a>
+              <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Operação</a>
               <div class="dropdown-menu">
-                <a class="dropdown-item" href="ranking.php">Ranking</a>
-                <a class="dropdown-item" href="#">Outra ação</a>
-                <a class="dropdown-item" href="#">Algo mais aqui</a>
+                <a class="dropdown-item" href="cancelado.php">Cancelados</a>
+                <a class="dropdown-item" href="dashboard.php">DashBoard</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" data-target=".bd-example-modal-lg">
                   <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-sm">Cadastrar novo operador</button>
@@ -93,6 +101,154 @@
 
      </nav>
    </header>
+
+   <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl" style="margin-left: 200px;">
+    <div class="modal-content" style="padding: 20px; width: 800px;">
+      <h4>Previsão:</h4>
+      <?php
+
+        $qtdDiaMes = cal_days_in_month(CAL_GREGORIAN,date('m'),date('Y'));
+
+
+        echo "<div class=\"table-responsive-xl\">";
+        echo "<table class=\"table table-hover text-center text-truncate\">";
+        echo "<thead class=\"thead-dark\">";
+        echo "<tr>";
+
+        echo   "<th scope=\"col\">DATA</th>";
+        echo   "<th scope=\"col\">PONTUAÇÃO</th>";
+        echo   "<th scope=\"col\">ATIVOS</th>";
+        echo   "<th scope=\"col\">COMERCIAL</th>";
+        echo   "<th scope=\"col\">TECNICO</th>";
+        echo   "<th scope=\"col\">BACKLOG</th>";
+        echo "</tr>";
+        echo "</thead>";
+
+        echo "<tbody>";
+
+        for ($i = 1; $i <= $qtdDiaMes; $i++){
+          $data_incio = mktime(0, 0, 0, date('m') , $i , date('Y'));
+          $data_apr = date('d/m/Y',$data_incio);
+          $data_sql = date('Y-m-d',$data_incio);
+          $hoje = date('Y-m-d');
+
+          echo "<td>$data_apr</td>";
+          $super = $dados['id'];
+
+          $sql = mysqli_query($connect,"SELECT * FROM proposta WHERE id_super = $super AND sitctrt = 'OK'");
+          $linha = mysqli_fetch_array($sql);
+          $total = 0;
+          if ($linha >0):
+            do{
+              $dtInst = $linha['data_instalacao'];
+              if ($dtInst == $data_sql):
+                $ponto = $linha['ponto'];
+                $pontoM = $linha['pontoM'];
+                $total += $ponto + $pontoM;
+              endif;
+            } while($linha = mysqli_fetch_assoc($sql));
+          endif;
+
+          if ($total != 0):
+            echo "<td>$total</td>";
+          else:
+            echo "<td></td>";
+          endif;
+
+
+          $sql = mysqli_query($connect,"SELECT * FROM proposta WHERE id_super = $super AND sitctrt = 'OK' AND situacao ='ATIVO'");
+          $linha = mysqli_fetch_array($sql);
+          $total = 0;
+          if ($linha >0):
+            do{
+              $dtInst = $linha['data_instalacao'];
+              if ($dtInst == $data_sql):
+                $ponto = $linha['ponto'];
+                $pontoM = $linha['pontoM'];
+                $total += $ponto + $pontoM;
+              endif;
+            } while($linha = mysqli_fetch_assoc($sql));
+          endif;
+
+          if ($total != 0):
+            echo "<td>$total</td>";
+          else:
+            echo "<td></td>";
+          endif;
+
+          $sql = mysqli_query($connect,"SELECT * FROM proposta WHERE id_super = $super AND sitctrt = 'OK' AND situacao ='COMERCIAL'");
+          $linha = mysqli_fetch_array($sql);
+          $total = 0;
+          if ($linha >0):
+            do{
+              $dtInst = $linha['data_instalacao'];
+              if ($dtInst == $data_sql):
+                $ponto = $linha['ponto'];
+                $pontoM = $linha['pontoM'];
+                $total += $ponto + $pontoM;
+              endif;
+            } while($linha = mysqli_fetch_assoc($sql));
+          endif;
+
+          if ($total != 0):
+            echo "<td>$total</td>";
+          else:
+            echo "<td></td>";
+          endif;
+
+          $sql = mysqli_query($connect,"SELECT * FROM proposta WHERE id_super = $super AND sitctrt = 'OK' AND situacao ='TECNICO'");
+          $linha = mysqli_fetch_array($sql);
+          $total = 0;
+          if ($linha >0):
+            do{
+              $dtInst = $linha['data_instalacao'];
+              if ($dtInst == $data_sql):
+                $ponto = $linha['ponto'];
+                $pontoM = $linha['pontoM'];
+                $total += $ponto + $pontoM;
+              endif;
+            } while($linha = mysqli_fetch_assoc($sql));
+          endif;
+
+          if ($total != 0):
+            echo "<td>$total</td>";
+          else:
+            echo "<td></td>";
+          endif;
+
+          $sql = mysqli_query($connect,"SELECT * FROM proposta WHERE id_super = $super AND sitctrt = 'OK' AND situacao ='BACKLOG'");
+          $linha = mysqli_fetch_array($sql);
+          $total = 0;
+          if ($linha >0):
+            do{
+              $dtInst = $linha['data_instalacao'];
+              if ($dtInst == $data_sql):
+                $ponto = $linha['ponto'];
+                $pontoM = $linha['pontoM'];
+                $total += $ponto + $pontoM;
+              endif;
+            } while($linha = mysqli_fetch_assoc($sql));
+          endif;
+
+          if ($total != 0):
+            echo "<td>$total</td>";
+          else:
+            echo "<td></td>";
+          endif;
+
+          echo "</tr>";
+        }
+
+        echo "</tbody>
+
+            </table>
+            </div>";
+
+       ?>
+    </div>
+  </div>
+</div>
 
    <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="novoOperador">
     <div class="modal-dialog modal-sm">
@@ -381,175 +537,175 @@
 
   </div>
 
-  <div id="ranking" style="width: 400px; padding: 10px; background-color: #DCDCDC; float: right; clear: right;;">
-    <h5>Pendências:</h5>
+    <div id="ranking" style="width: 400px; padding: 10px; background-color: #DCDCDC; float: right; clear: right;;">
+      <h5>Pendências:</h5>
 
-    <?php
-    $hoje = date('Y-m-d');
-    $supervisor = $dados["id"];
-    $con = mysqli_connect("localhost", "root", "", "crmclik");
-    $sql = mysqli_query($connect, "SELECT * FROM proposta WHERE situacao != 'APROVADO' AND situacao != 'APROVADO DIVERGENTE' AND situacao != 'CADASTRO OK' AND data_venda = '$hoje' AND id_super = '$supervisor'") or print mysql_error();
-    $linha = mysqli_fetch_array($sql);
+      <?php
+      $hoje = date('Y-m-d');
+      $supervisor = $dados["id"];
+      $con = mysqli_connect("localhost", "root", "", "crmclik");
+      $sql = mysqli_query($connect, "SELECT * FROM proposta WHERE situacao != 'APROVADO' AND situacao != 'APROVADO DIVERGENTE' AND situacao != 'CADASTRO OK' AND data_venda = '$hoje' AND id_super = '$supervisor'") or print mysql_error();
+      $linha = mysqli_fetch_array($sql);
 
 
 
-    $contrato= $linha["contrato"];
+      $contrato= $linha["contrato"];
 
-    if(mysqli_num_rows($sql)>0):
-      echo "<div class=\"table-responsive-xl\">";
-      echo "<table class=\"table table-hover text-center text-truncate\">";
-      echo "<thead class=\"thead-dark\">";
-      echo "<tr>";
+      if(mysqli_num_rows($sql)>0):
+        echo "<div class=\"table-responsive-xl\">";
+        echo "<table class=\"table table-hover text-center text-truncate\">";
+        echo "<thead class=\"thead-dark\">";
+        echo "<tr>";
 
-      echo   "<th scope=\"col\">Vendedor</th>";
-      echo   "<th scope=\"col\">Status</th>";
-      echo   "<th scope=\"col\">Data Instalação</th>";
-      echo   "<th scope=\"col\">Turno</th>";
-      echo   "<th scope=\"col\">Inst Chamado</th>";
-      echo   "<th scope=\"col\">Cidade</th>";
-      echo   "<th scope=\"col\">Contrato</th>";
-      echo   "<th scope=\"col\">Data Venda</th>";
-      echo   "<th scope=\"col\">CPF Cliente</th>";
-      echo   "<th scope=\"col\">Cliente</th>";
-      echo   "<th scope=\"col\">Fone1</th>";
-      echo   "<th scope=\"col\">Fone2</th>";
-      echo   "<th scope=\"col\">Tv</th>";
-      echo   "<th scope=\"col\">Pt Adc Tv</th>";
-      echo   "<th scope=\"col\">Internet</th>";
-      echo   "<th scope=\"col\">Fone</th>";
-      echo   "<th scope=\"col\">Móvel</th>";
-      echo   "<th scope=\"col\">Valor</th>";
-      echo   "<th scope=\"col\">Pontuação</th>";
-      echo   "<th scope=\"col\">Pontuação - Móvel</th>";
-      echo   "<th scope=\"col\">BackOffice</th>";
-      echo "</tr>";
-      echo "</thead>";
+        echo   "<th scope=\"col\">Vendedor</th>";
+        echo   "<th scope=\"col\">Status</th>";
+        echo   "<th scope=\"col\">Data Instalação</th>";
+        echo   "<th scope=\"col\">Turno</th>";
+        echo   "<th scope=\"col\">Inst Chamado</th>";
+        echo   "<th scope=\"col\">Cidade</th>";
+        echo   "<th scope=\"col\">Contrato</th>";
+        echo   "<th scope=\"col\">Data Venda</th>";
+        echo   "<th scope=\"col\">CPF Cliente</th>";
+        echo   "<th scope=\"col\">Cliente</th>";
+        echo   "<th scope=\"col\">Fone1</th>";
+        echo   "<th scope=\"col\">Fone2</th>";
+        echo   "<th scope=\"col\">Tv</th>";
+        echo   "<th scope=\"col\">Pt Adc Tv</th>";
+        echo   "<th scope=\"col\">Internet</th>";
+        echo   "<th scope=\"col\">Fone</th>";
+        echo   "<th scope=\"col\">Móvel</th>";
+        echo   "<th scope=\"col\">Valor</th>";
+        echo   "<th scope=\"col\">Pontuação</th>";
+        echo   "<th scope=\"col\">Pontuação - Móvel</th>";
+        echo   "<th scope=\"col\">BackOffice</th>";
+        echo "</tr>";
+        echo "</thead>";
 
-      echo "<tbody>";
-      //Lembrete = tentar fazer uma nova tabela a cada ciclo
-      do {
+        echo "<tbody>";
+        //Lembrete = tentar fazer uma nova tabela a cada ciclo
+        do {
 
-        $clienteCpf = $linha["cpf_cliente"];
-        $sqlC = mysqli_query($connect, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
-        $linhaC = mysqli_fetch_array($sqlC);
+          $clienteCpf = $linha["cpf_cliente"];
+          $sqlC = mysqli_query($connect, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
+          $linhaC = mysqli_fetch_array($sqlC);
 
-        $vendedor = $linha["id_vendedor"];
-        $sqlV = mysqli_query($connect, "SELECT * FROM operador WHERE id = '{$vendedor}'") or print mysql_error();
-        $linhaV = mysqli_fetch_array($sqlV);
+          $vendedor = $linha["id_vendedor"];
+          $sqlV = mysqli_query($connect, "SELECT * FROM operador WHERE id = '{$vendedor}'") or print mysql_error();
+          $linhaV = mysqli_fetch_array($sqlV);
 
-         $nmVendedor = $linhaV['login'];
-          echo "<td>$nmVendedor</td>";
+           $nmVendedor = $linhaV['login'];
+            echo "<td>$nmVendedor</td>";
 
-          $status = $linha["situacao"];
-          echo   "<td>$status</td>";
+            $status = $linha["situacao"];
+            echo   "<td>$status</td>";
 
-          $dtInstala = $linha["data_instalacao"];
-          if(empty($dtInstala)):
-            echo   "<td>$dtInstala</td>";
-          else:
-            $newDate = date("d/m/Y", strtotime($dtInstala));
-            echo   "<td>$newDate</td>";
-          endif;
-
-            $turnoInst = $linha["turnoinst"];
-            if ($turnoInst == "NULL"):
-              echo "<td></td>";
+            $dtInstala = $linha["data_instalacao"];
+            if(empty($dtInstala)):
+              echo   "<td>$dtInstala</td>";
             else:
-              echo   "<td>$turnoInst</td>";
+              $newDate = date("d/m/Y", strtotime($dtInstala));
+              echo   "<td>$newDate</td>";
             endif;
 
-            $chamadoinst = $linha["chamadoinst"];
-            if ($chamadoinst == "NULL"):
-              echo "<td></td>";
+              $turnoInst = $linha["turnoinst"];
+              if ($turnoInst == "NULL"):
+                echo "<td></td>";
+              else:
+                echo   "<td>$turnoInst</td>";
+              endif;
+
+              $chamadoinst = $linha["chamadoinst"];
+              if ($chamadoinst == "NULL"):
+                echo "<td></td>";
+              else:
+                echo   "<td>$chamadoinst</td>";
+              endif;
+
+
+
+              $localCidade = $linhaC["cidade"];
+              echo   "<td>$localCidade</td>";
+
+              $contratoC = $linha["contrato"];
+              echo   "<td>$contratoC</td>";
+
+
+
+            $dtVenda = $linha["data_venda"];
+            if(empty($dtVenda)):
+              echo   "<td>$dtVenda</td>";
             else:
-              echo   "<td>$chamadoinst</td>";
+              $newDate = date("d/m/Y", strtotime($dtVenda));
+              echo   "<td>$newDate</td>";
             endif;
 
+            echo   "<td>$clienteCpf</td>";
 
 
-            $localCidade = $linhaC["cidade"];
-            echo   "<td>$localCidade</td>";
+            $nmcliente = $linhaC["nome"];
+            echo   "<td>$nmcliente</td>";
 
-            $contratoC = $linha["contrato"];
-            echo   "<td>$contratoC</td>";
+            $F1Cliente = $linhaC["telfixo"];
+            echo   "<td>$F1Cliente</td>";
 
+            $F2Cliente = $linhaC["telmovel"];
+            echo   "<td>$F2Cliente</td>";
 
+            $planoTv = $linha["tv"];
+            if ($planoTv == "NULL"):
+              echo   "<td></td>";
+            else:
+              echo "<td>$planoTv</td>";
+            endif;
 
-          $dtVenda = $linha["data_venda"];
-          if(empty($dtVenda)):
-            echo   "<td>$dtVenda</td>";
-          else:
-            $newDate = date("d/m/Y", strtotime($dtVenda));
-            echo   "<td>$newDate</td>";
-          endif;
+            $pontoTv = $linha["pt_adc_tv"];
+            if ($pontoTv == 0):
+              echo "<td></td>";
+            else:
+              echo   "<td>$pontoTv</td>";
+            endif;
 
-          echo   "<td>$clienteCpf</td>";
+            $net = $linha["internet"];
+            if ($net == "NULL"):
+              echo "<td></td>";
+            else:
+              echo   "<td>$net</td>";
+            endif;
 
+            $fone = $linha["telefone"];
+            if ($fone == "NULL"):
+              echo "<td></td>";
+            else:
+              echo   "<td>$fone</td>";
+            endif;
 
-          $nmcliente = $linhaC["nome"];
-          echo   "<td>$nmcliente</td>";
+            $movel = $linha["movel"];
+            if ($movel == "NULL"):
+              echo "<td></td>";
+            else:
+              echo   "<td>$movel</td>";
+            endif;
 
-          $F1Cliente = $linhaC["telfixo"];
-          echo   "<td>$F1Cliente</td>";
-
-          $F2Cliente = $linhaC["telmovel"];
-          echo   "<td>$F2Cliente</td>";
-
-          $planoTv = $linha["tv"];
-          if ($planoTv == "NULL"):
-            echo   "<td></td>";
-          else:
-            echo "<td>$planoTv</td>";
-          endif;
-
-          $pontoTv = $linha["pt_adc_tv"];
-          if ($pontoTv == 0):
-            echo "<td></td>";
-          else:
-            echo   "<td>$pontoTv</td>";
-          endif;
-
-          $net = $linha["internet"];
-          if ($net == "NULL"):
-            echo "<td></td>";
-          else:
-            echo   "<td>$net</td>";
-          endif;
-
-          $fone = $linha["telefone"];
-          if ($fone == "NULL"):
-            echo "<td></td>";
-          else:
-            echo   "<td>$fone</td>";
-          endif;
-
-          $movel = $linha["movel"];
-          if ($movel == "NULL"):
-            echo "<td></td>";
-          else:
-            echo   "<td>$movel</td>";
-          endif;
-
-          $precoP = number_format($linha["preco"], 2, '.', '');
-            echo   "<td>R$ $precoP</td>";
+            $precoP = number_format($linha["preco"], 2, '.', '');
+              echo   "<td>R$ $precoP</td>";
 
 
 
 
 
-          $pontuacao = $linha["ponto"];
-          echo   "<td>$pontuacao</td>";
+            $pontuacao = $linha["ponto"];
+            echo   "<td>$pontuacao</td>";
 
-          $pontuacaoMovel = $linha["pontoM"];
-          echo   "<td>$pontuacaoMovel</td>";
+            $pontuacaoMovel = $linha["pontoM"];
+            echo   "<td>$pontuacaoMovel</td>";
 
-          $idBko = $linha["id_bko"];
-          $sqlB = mysqli_query($con, "SELECT * FROM operador WHERE id = '{$idBko}'") or print mysql_error();
-          $linhaB = mysqli_fetch_array($sqlB);
-          $nmBko = $linhaB["login"];
-          echo   "<td>$nmBko</td>";
+            $idBko = $linha["id_bko"];
+            $sqlB = mysqli_query($con, "SELECT * FROM operador WHERE id = '{$idBko}'") or print mysql_error();
+            $linhaB = mysqli_fetch_array($sqlB);
+            $nmBko = $linhaB["login"];
+            echo   "<td>$nmBko</td>";
 
-          echo "</tr>";
+            echo "</tr>";
 
 
 
@@ -557,18 +713,207 @@
 
 
 
-      } while ($linha = mysqli_fetch_assoc($sql));
-      echo "</tbody>";
+        } while ($linha = mysqli_fetch_assoc($sql));
+        echo "</tbody>";
 
-      echo "</table>";
-      echo "</div>";
-    else:
-      echo "<h6>Sem dados</h6>";
-    endif;
+        echo "</table>";
+        echo "</div>";
+      else:
+        echo "<h6>Sem dados</h6>";
+      endif;
 
-      ?>
+        ?>
 
-  </div>
+    </div>
+
+    <div id="ranking" style="width: 400px; padding: 10px; background-color: #DCDCDC; float: right; clear: right; margin-top: 17px;">
+      <h5>Instalações:</h5>
+
+      <?php
+      $hoje = date('Y-m-d');
+      $supervisor = $dados["id"];
+      $con = mysqli_connect("localhost", "root", "", "crmclik");
+      $sql = mysqli_query($connect, "SELECT * FROM proposta WHERE data_instalacao = '$hoje' AND id_super = '$supervisor'") or print mysql_error();
+      $linha = mysqli_fetch_array($sql);
+
+
+
+      $contrato= $linha["contrato"];
+
+      if(mysqli_num_rows($sql)>0):
+        echo "<div class=\"table-responsive-xl\">";
+        echo "<table class=\"table table-hover text-center text-truncate\">";
+        echo "<thead class=\"thead-dark\">";
+        echo "<tr>";
+
+        echo   "<th scope=\"col\">Vendedor</th>";
+        echo   "<th scope=\"col\">Status</th>";
+        echo   "<th scope=\"col\">Data Instalação</th>";
+        echo   "<th scope=\"col\">Turno</th>";
+        echo   "<th scope=\"col\">Inst Chamado</th>";
+        echo   "<th scope=\"col\">Cidade</th>";
+        echo   "<th scope=\"col\">Contrato</th>";
+        echo   "<th scope=\"col\">Data Venda</th>";
+        echo   "<th scope=\"col\">CPF Cliente</th>";
+        echo   "<th scope=\"col\">Cliente</th>";
+        echo   "<th scope=\"col\">Fone1</th>";
+        echo   "<th scope=\"col\">Fone2</th>";
+        echo   "<th scope=\"col\">Tv</th>";
+        echo   "<th scope=\"col\">Pt Adc Tv</th>";
+        echo   "<th scope=\"col\">Internet</th>";
+        echo   "<th scope=\"col\">Fone</th>";
+        echo   "<th scope=\"col\">Móvel</th>";
+        echo   "<th scope=\"col\">Valor</th>";
+        echo   "<th scope=\"col\">Pontuação</th>";
+        echo   "<th scope=\"col\">Pontuação - Móvel</th>";
+        echo   "<th scope=\"col\">BackOffice</th>";
+        echo "</tr>";
+        echo "</thead>";
+
+        echo "<tbody>";
+        //Lembrete = tentar fazer uma nova tabela a cada ciclo
+        do {
+
+          $clienteCpf = $linha["cpf_cliente"];
+          $sqlC = mysqli_query($connect, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
+          $linhaC = mysqli_fetch_array($sqlC);
+
+          $vendedor = $linha["id_vendedor"];
+          $sqlV = mysqli_query($connect, "SELECT * FROM operador WHERE id = '{$vendedor}'") or print mysql_error();
+          $linhaV = mysqli_fetch_array($sqlV);
+
+           $nmVendedor = $linhaV['login'];
+            echo "<td>$nmVendedor</td>";
+
+            $status = $linha["situacao"];
+            echo   "<td>$status</td>";
+
+            $dtInstala = $linha["data_instalacao"];
+            if(empty($dtInstala)):
+              echo   "<td>$dtInstala</td>";
+            else:
+              $newDate = date("d/m/Y", strtotime($dtInstala));
+              echo   "<td>$newDate</td>";
+            endif;
+
+              $turnoInst = $linha["turnoinst"];
+              if ($turnoInst == "NULL"):
+                echo "<td></td>";
+              else:
+                echo   "<td>$turnoInst</td>";
+              endif;
+
+              $chamadoinst = $linha["chamadoinst"];
+              if ($chamadoinst == "NULL"):
+                echo "<td></td>";
+              else:
+                echo   "<td>$chamadoinst</td>";
+              endif;
+
+
+
+              $localCidade = $linhaC["cidade"];
+              echo   "<td>$localCidade</td>";
+
+              $contratoC = $linha["contrato"];
+              echo   "<td>$contratoC</td>";
+
+
+
+            $dtVenda = $linha["data_venda"];
+            if(empty($dtVenda)):
+              echo   "<td>$dtVenda</td>";
+            else:
+              $newDate = date("d/m/Y", strtotime($dtVenda));
+              echo   "<td>$newDate</td>";
+            endif;
+
+            echo   "<td>$clienteCpf</td>";
+
+
+            $nmcliente = $linhaC["nome"];
+            echo   "<td>$nmcliente</td>";
+
+            $F1Cliente = $linhaC["telfixo"];
+            echo   "<td>$F1Cliente</td>";
+
+            $F2Cliente = $linhaC["telmovel"];
+            echo   "<td>$F2Cliente</td>";
+
+            $planoTv = $linha["tv"];
+            if ($planoTv == "NULL"):
+              echo   "<td></td>";
+            else:
+              echo "<td>$planoTv</td>";
+            endif;
+
+            $pontoTv = $linha["pt_adc_tv"];
+            if ($pontoTv == 0):
+              echo "<td></td>";
+            else:
+              echo   "<td>$pontoTv</td>";
+            endif;
+
+            $net = $linha["internet"];
+            if ($net == "NULL"):
+              echo "<td></td>";
+            else:
+              echo   "<td>$net</td>";
+            endif;
+
+            $fone = $linha["telefone"];
+            if ($fone == "NULL"):
+              echo "<td></td>";
+            else:
+              echo   "<td>$fone</td>";
+            endif;
+
+            $movel = $linha["movel"];
+            if ($movel == "NULL"):
+              echo "<td></td>";
+            else:
+              echo   "<td>$movel</td>";
+            endif;
+
+            $precoP = number_format($linha["preco"], 2, '.', '');
+              echo   "<td>R$ $precoP</td>";
+
+
+
+
+
+            $pontuacao = $linha["ponto"];
+            echo   "<td>$pontuacao</td>";
+
+            $pontuacaoMovel = $linha["pontoM"];
+            echo   "<td>$pontuacaoMovel</td>";
+
+            $idBko = $linha["id_bko"];
+            $sqlB = mysqli_query($con, "SELECT * FROM operador WHERE id = '{$idBko}'") or print mysql_error();
+            $linhaB = mysqli_fetch_array($sqlB);
+            $nmBko = $linhaB["login"];
+            echo   "<td>$nmBko</td>";
+
+            echo "</tr>";
+
+
+
+
+
+
+
+        } while ($linha = mysqli_fetch_assoc($sql));
+        echo "</tbody>";
+
+        echo "</table>";
+        echo "</div>";
+      else:
+        echo "<h6>Sem dados</h6>";
+      endif;
+
+        ?>
+
+    </div>
 
   </div>
 

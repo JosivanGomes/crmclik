@@ -44,7 +44,7 @@
 
    <title>Acompanhamento do dia</title>
  </head>
- <body>
+ <body onload="pesquisar()">
    <div class="usuarioID">
      <?php
          echo 'Logado como: '.$dados["login"];
@@ -71,11 +71,9 @@
 
 
            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Operadores</a>
+              <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Operação</a>
               <div class="dropdown-menu">
-                <a class="dropdown-item" href="ranking.php">Ranking</a>
-                <a class="dropdown-item" href="#">Outra ação</a>
-                <a class="dropdown-item" href="#">Algo mais aqui</a>
+                <a class="dropdown-item" href="dashboard.php">DashBoard</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" data-target=".bd-example-modal-lg">
                   <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-sm">Cadastrar novo operador</button>
@@ -91,6 +89,37 @@
 
      </nav>
    </header>
+
+   <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="novoOperador">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <form style="padding: 20px;">
+          <div class="form-group">
+            <label for="exampleInputEmail1">Nome Completo: </label>
+            <input type="text" class="form-control" id="nomeOperador" placeholder="Nome Operador">
+          </div>
+
+          <div class="form-group">
+            <label for="exampleInputEmail1">Login: </label>
+            <input type="text" class="form-control" id="loginOperador" placeholder="Login Operador">
+          </div>
+
+          <div class="form-group">
+            <label for="exampleInputEmail1">Senha: </label>
+            <input type="password" class="form-control" id="senhaOperador">
+          </div>
+
+          <button type="button" class="btn btn-primary" data-toggle="modal" onclick="incluiOperador()">Enviar</button>
+
+          <div id="resultado">
+
+          </div>
+
+        </form>
+      </div>
+    </div>
+   </div>
+
 
    <form style="margin: 10px; padding: 20px; background-color: #778899;">
     <div class="form-row">
@@ -140,19 +169,18 @@
         <input type="date" class="form-control" id="dataF">
       </div>
       <div style="width: 100%; text-align: center;">
-        <a class="btn btn-dark" style="align: center; color: green;" onclick="pesquisar()">Pesquisar</a>
+        <a class="btn btn-dark" style="align: center; color: white;" onclick="pesquisar()">PESQUISAR</a>
       </div>
     </div>
   </form>
 
 
 
-  <?php
-  echo "<div id=\"telaPrincipal\">
+  <div id="telaPrincipal" style="margin: 10px;">
 
 
-  </div> ";
-   ?>
+  </div>
+
 
 
    <script>
@@ -175,6 +203,7 @@
                  success: function(data) {
                    console.log(data);
                    data = $.parseJSON(data);
+                   $("#telaPrincipal").html("");
                    $("#telaPrincipal").append(data.retorno);
 
                }
