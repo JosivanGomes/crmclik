@@ -21,6 +21,9 @@
   $dataI = $_POST['data_i'];
   $dataF = $_POST['data_f'];
 
+  $cpfPost = $_POST['cpf_cliente'];
+  $contrato = $_POST['contrato'];
+
 
   $sql = "SELECT * FROM proposta WHERE ";
 
@@ -36,9 +39,25 @@
     endif;
   endif;
 
+  if (!empty($cpfPost)):
+    if (($venda != 'TODOS')||($sitVenda != "GERAL")):
+      $sql = $sql." AND cpf_cliente = '$cpfPost'";
+    else:
+      $sql = $sql." cpf_cliente = '$cpfPost'";
+    endif;
+  endif;
+
+  if (!empty($contrato)):
+    if ((($venda != 'TODOS')||($sitVenda != "GERAL")||(!empty($cpfPost)))):
+      $sql = $sql." AND contrato = '$contrato'";
+    else:
+      $sql = $sql." contrato = '$contrato'";
+    endif;
+  endif;
+
 
   if (empty($dataI)):
-    if (($venda != 'TODOS')||(($sitVenda != "GERAL"))):
+    if ((($venda != 'TODOS')||($sitVenda != "GERAL")||(!empty($cpfPost))||(!empty($contrato)))):
       $sql = $sql." AND MONTH(data_venda) = '$mHoje'";
     else:
       $sql = $sql." MONTH(data_venda) = '$mHoje'";

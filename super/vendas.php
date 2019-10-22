@@ -126,6 +126,7 @@
       <div class="form-group col-md-4">
         <label class="mr-sm-2">Situação</label>
         <select class="custom-select mr-sm-2" id="situacao">
+          <option value="GERAL"></option>
           <option value="GERAL">Geral</option>
           <option value="ATIVO">Ativo</option>
           <option value="APROVADO">Aprovado</option>
@@ -139,6 +140,7 @@
       <div class="form-group col-md-4">
         <label class="mr-sm-2">Vendedor</label>
         <select class="custom-select mr-sm-2" id="vendedor">
+          <option value="TODOS"></option>
           <option value="TODOS">Todos</option>
           <?php
             $supervisor = $dados['id'];
@@ -168,6 +170,18 @@
         <label for="inputEmail4">Data Fim</label>
         <input type="date" class="form-control" id="dataF">
       </div>
+
+
+        <div class="form-group col-md-4">
+          <label>Cpf Cliente</label>
+          <input type="text" class="form-control" id="cpfCliente">
+        </div>
+        <div class="form-group col-md-4" style="margin-left: 318px;">
+          <label>Contrato</label>
+          <input type="text" class="form-control" id="contratoProposta">
+        </div>
+
+
       <div style="width: 100%; text-align: center;">
         <a class="btn btn-dark" style="align: center; color: white;" onclick="pesquisar()">PESQUISAR</a>
       </div>
@@ -199,12 +213,15 @@
                       vendedor : $("#vendedor").val(),
                       data_i : $("#dataI").val(),
                       data_f : $("#dataF").val(),
+                      cpf_cliente : $("#cpfCliente").val(),
+                      contrato : $("#contratoProposta").val()
                     },
                  success: function(data) {
                    console.log(data);
                    data = $.parseJSON(data);
                    $("#telaPrincipal").html("");
                    $("#telaPrincipal").append(data.retorno);
+                   
 
                }
 

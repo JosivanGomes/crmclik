@@ -59,15 +59,23 @@
        </a>
 
 
-       <a href="#">
-         <img src="img/agenda_icone.png" alt="Agenda" title="Agenda" class="rounded-circle" style="width: 30px; background-color: #f0f0f0;">
+       <a href="#" data-toggle="modal" data-target="#agenda">
+         <img src="img/agenda.png" alt="Agenda" title="Agenda" class="rounded-circle" style="width: 40px; background-color: #f0f0f0;">
        </a>
 
-       <a data-toggle="modal" data-target=".bd-example-modal-xl" href="#">
-         <img src="img/previsao.jpg" alt="Agenda" title="Agenda" class="rounded-circle" style="width: 30px; background-color: #f0f0f0;">
+       <a data-toggle="modal" data-target="#previsao" href="#">
+         <img src="img/previsao.jpg" alt="Previsão" title="Previsão" class="rounded-circle" style="width: 40px; background-color: #f0f0f0;">
        </a>
 
-         <ul class="navbar-nav" style="margin-left: 430px">
+       <a data-toggle="modal" data-target="#diarioVendedor" href="#">
+         <img src="img/diario.jpg" alt="Diário Vendedor" title="Diário Vendedor" class="rounded-circle" style="width: 45px; background-color: #f0f0f0;">
+       </a>
+
+       <a data-toggle="modal" data-target="#rankingMes" href="#">
+         <img src="img/trofeu.jpg" alt="Ranking" title="Ranking" class="rounded-circle" style="width: 45px; background-color: #f0f0f0;">
+       </a>
+
+         <ul class="navbar-nav" style="margin-left: 390px">
 
 
            <li class="nav-item dropdown">
@@ -102,153 +110,615 @@
      </nav>
    </header>
 
-   <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl" style="margin-left: 200px;">
-    <div class="modal-content" style="padding: 20px; width: 800px;">
-      <h4>Previsão:</h4>
-      <?php
+   <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true" id="agenda">
+    <div class="modal-dialog modal-xl" style="margin-left: 200px;">
+      <h4 style="color: #f0f0f0; font-size: 30px;">Proximas instalações:</h4>
+        <div class="modal-content" style="padding: 20px; width: 800px;">
+            <?php
 
-        $qtdDiaMes = cal_days_in_month(CAL_GREGORIAN,date('m'),date('Y'));
+            $hoje = date('Y-m-d');
+            $supervisor = $dados["id"];
 
 
-        echo "<div class=\"table-responsive-xl\">";
-        echo "<table class=\"table table-hover text-center text-truncate\">";
-        echo "<thead class=\"thead-dark\">";
-        echo "<tr>";
 
-        echo   "<th scope=\"col\">DATA</th>";
-        echo   "<th scope=\"col\">PONTUAÇÃO</th>";
-        echo   "<th scope=\"col\">ATIVOS</th>";
-        echo   "<th scope=\"col\">COMERCIAL</th>";
-        echo   "<th scope=\"col\">TECNICO</th>";
-        echo   "<th scope=\"col\">BACKLOG</th>";
-        echo "</tr>";
-        echo "</thead>";
 
-        echo "<tbody>";
+            $con = mysqli_connect("localhost", "root", "", "crmclik");
+            $sql = mysqli_query($con, "SELECT * FROM proposta WHERE id_super = '{$supervisor}' AND situacao = 'APROVADO' AND data_instalacao > '$hoje'") or print mysql_error();
+            $linha = mysqli_fetch_array($sql);
 
-        for ($i = 1; $i <= $qtdDiaMes; $i++){
-          $data_incio = mktime(0, 0, 0, date('m') , $i , date('Y'));
-          $data_apr = date('d/m/Y',$data_incio);
-          $data_sql = date('Y-m-d',$data_incio);
-          $hoje = date('Y-m-d');
 
-          echo "<td>$data_apr</td>";
-          $super = $dados['id'];
 
-          $sql = mysqli_query($connect,"SELECT * FROM proposta WHERE id_super = $super AND sitctrt = 'OK'");
-          $linha = mysqli_fetch_array($sql);
-          $total = 0;
-          if ($linha >0):
-            do{
-              $dtInst = $linha['data_instalacao'];
-              if ($dtInst == $data_sql):
-                $ponto = $linha['ponto'];
-                $pontoM = $linha['pontoM'];
-                $total += $ponto + $pontoM;
+            $contrato= $linha["contrato"];
+            $listaInstalacao = array();
+            if(mysqli_num_rows($sql)>0):
+              do {
+                $dataInst = $linha['data_instalacao'];
+                if (!in_array("$dataInst", $listaInstalacao)):
+                  $listaInstalacao[] = $linha['data_instalacao'];
+                endif;
+              } while ($linha = mysqli_fetch_assoc($sql));
+
+            endif;
+
+
+
+            function sortFunction( $a, $b ) {
+                return strtotime($a) - strtotime($b);
+            }
+            usort($listaInstalacao, "sortFunction");
+
+
+            $contador = count($listaInstalacao);
+
+            for ($i=0; $i < $contador; $i++) {
+              $diaInst = $listaInstalacao[$i];
+              $con = mysqli_connect("localhost", "root", "", "crmclik");
+              $sql = mysqli_query($con, "SELECT * FROM proposta WHERE id_super = '{$supervisor}' AND data_instalacao = '$diaInst'") or print mysql_error();
+              $linha = mysqli_fetch_array($sql);
+
+
+
+              $contrato= $linha["contrato"];
+              $diaInst = date('d/m/Y', strtotime($diaInst));
+              echo "Data: $diaInst";
+              if(mysqli_num_rows($sql)>0):
+                echo "<div class=\"table-responsive-xl\">";
+                echo "<table class=\"table table-hover text-center text-truncate\">";
+                echo "<thead class=\"thead-dark\">";
+                echo "<tr>";
+
+                echo   "<th scope=\"col\">Vendedor</th>";
+                echo   "<th scope=\"col\">Status</th>";
+                echo   "<th scope=\"col\">Data Instalação</th>";
+                echo   "<th scope=\"col\">Turno</th>";
+                echo   "<th scope=\"col\">Inst Chamado</th>";
+                echo   "<th scope=\"col\">Cidade</th>";
+                echo   "<th scope=\"col\">Contrato</th>";
+                echo   "<th scope=\"col\">Data Venda</th>";
+                echo   "<th scope=\"col\">CPF Cliente</th>";
+                echo   "<th scope=\"col\">Cliente</th>";
+                echo   "<th scope=\"col\">Fone1</th>";
+                echo   "<th scope=\"col\">Fone2</th>";
+                echo   "<th scope=\"col\">Tv</th>";
+                echo   "<th scope=\"col\">Pt Adc Tv</th>";
+                echo   "<th scope=\"col\">Internet</th>";
+                echo   "<th scope=\"col\">Fone</th>";
+                echo   "<th scope=\"col\">Móvel</th>";
+                echo   "<th scope=\"col\">Valor</th>";
+                echo   "<th scope=\"col\">Pontuação</th>";
+                echo   "<th scope=\"col\">Pontuação - Móvel</th>";
+                echo   "<th scope=\"col\">BackOffice</th>";
+                echo "</tr>";
+                echo "</thead>";
+
+                echo "<tbody>";
+                //Lembrete = tentar fazer uma nova tabela a cada ciclo
+                do {
+
+                  $clienteCpf = $linha["cpf_cliente"];
+                  $sqlC = mysqli_query($connect, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
+                  $linhaC = mysqli_fetch_array($sqlC);
+
+                  $vendedor = $linha["id_vendedor"];
+                  $sqlV = mysqli_query($connect, "SELECT * FROM operador WHERE id = '{$vendedor}'") or print mysql_error();
+                  $linhaV = mysqli_fetch_array($sqlV);
+
+                   $nmVendedor = $linhaV['login'];
+                    echo "<td>$nmVendedor</td>";
+
+                    $status = $linha["situacao"];
+                    echo   "<td>$status</td>";
+
+                    $dtInstala = $linha["data_instalacao"];
+                    if(empty($dtInstala)):
+                      echo   "<td>$dtInstala</td>";
+                    else:
+                      $newDate = date("d/m/Y", strtotime($dtInstala));
+                      echo   "<td>$newDate</td>";
+                    endif;
+
+                      $turnoInst = $linha["turnoinst"];
+                      if ($turnoInst == "NULL"):
+                        echo "<td></td>";
+                      else:
+                        echo   "<td>$turnoInst</td>";
+                      endif;
+
+                      $chamadoinst = $linha["chamadoinst"];
+                      if ($chamadoinst == "NULL"):
+                        echo "<td></td>";
+                      else:
+                        echo   "<td>$chamadoinst</td>";
+                      endif;
+
+
+
+                      $localCidade = $linhaC["cidade"];
+                      echo   "<td>$localCidade</td>";
+
+                      $contratoC = $linha["contrato"];
+                      echo   "<td>$contratoC</td>";
+
+
+
+                    $dtVenda = $linha["data_venda"];
+                    if(empty($dtVenda)):
+                      echo   "<td>$dtVenda</td>";
+                    else:
+                      $newDate = date("d/m/Y", strtotime($dtVenda));
+                      echo   "<td>$newDate</td>";
+                    endif;
+
+                    echo   "<td>$clienteCpf</td>";
+
+
+                    $nmcliente = $linhaC["nome"];
+                    echo   "<td>$nmcliente</td>";
+
+                    $F1Cliente = $linhaC["telfixo"];
+                    echo   "<td>$F1Cliente</td>";
+
+                    $F2Cliente = $linhaC["telmovel"];
+                    echo   "<td>$F2Cliente</td>";
+
+                    $planoTv = $linha["tv"];
+                    if ($planoTv == "NULL"):
+                      echo   "<td></td>";
+                    else:
+                      echo "<td>$planoTv</td>";
+                    endif;
+
+                    $pontoTv = $linha["pt_adc_tv"];
+                    if ($pontoTv == 0):
+                      echo "<td></td>";
+                    else:
+                      echo   "<td>$pontoTv</td>";
+                    endif;
+
+                    $net = $linha["internet"];
+                    if ($net == "NULL"):
+                      echo "<td></td>";
+                    else:
+                      echo   "<td>$net</td>";
+                    endif;
+
+                    $fone = $linha["telefone"];
+                    if ($fone == "NULL"):
+                      echo "<td></td>";
+                    else:
+                      echo   "<td>$fone</td>";
+                    endif;
+
+                    $movel = $linha["movel"];
+                    if ($movel == "NULL"):
+                      echo "<td></td>";
+                    else:
+                      echo   "<td>$movel</td>";
+                    endif;
+
+                    $precoP = number_format($linha["preco"], 2, '.', '');
+                      echo   "<td>R$ $precoP</td>";
+
+
+
+
+
+                    $pontuacao = $linha["ponto"];
+                    echo   "<td>$pontuacao</td>";
+
+                    $pontuacaoMovel = $linha["pontoM"];
+                    echo   "<td>$pontuacaoMovel</td>";
+
+                    $idBko = $linha["id_bko"];
+                    $sqlB = mysqli_query($con, "SELECT * FROM operador WHERE id = '{$idBko}'") or print mysql_error();
+                    $linhaB = mysqli_fetch_array($sqlB);
+                    $nmBko = $linhaB["login"];
+                    echo   "<td>$nmBko</td>";
+
+                    echo "</tr>";
+
+
+
+
+
+
+
+                } while ($linha = mysqli_fetch_assoc($sql));
+                echo "</tbody>";
+
+                echo "</table>";
+                echo "</div>";
+              else:
+                echo "<h2>Sem dados</h2>";
               endif;
-            } while($linha = mysqli_fetch_assoc($sql));
-          endif;
 
-          if ($total != 0):
-            echo "<td>$total</td>";
-          else:
-            echo "<td></td>";
-          endif;
+            }
 
 
-          $sql = mysqli_query($connect,"SELECT * FROM proposta WHERE id_super = $super AND sitctrt = 'OK' AND situacao ='ATIVO'");
-          $linha = mysqli_fetch_array($sql);
-          $total = 0;
-          if ($linha >0):
-            do{
-              $dtInst = $linha['data_instalacao'];
-              if ($dtInst == $data_sql):
-                $ponto = $linha['ponto'];
-                $pontoM = $linha['pontoM'];
-                $total += $ponto + $pontoM;
-              endif;
-            } while($linha = mysqli_fetch_assoc($sql));
-          endif;
 
-          if ($total != 0):
-            echo "<td>$total</td>";
-          else:
-            echo "<td></td>";
-          endif;
-
-          $sql = mysqli_query($connect,"SELECT * FROM proposta WHERE id_super = $super AND sitctrt = 'OK' AND situacao ='COMERCIAL'");
-          $linha = mysqli_fetch_array($sql);
-          $total = 0;
-          if ($linha >0):
-            do{
-              $dtInst = $linha['data_instalacao'];
-              if ($dtInst == $data_sql):
-                $ponto = $linha['ponto'];
-                $pontoM = $linha['pontoM'];
-                $total += $ponto + $pontoM;
-              endif;
-            } while($linha = mysqli_fetch_assoc($sql));
-          endif;
-
-          if ($total != 0):
-            echo "<td>$total</td>";
-          else:
-            echo "<td></td>";
-          endif;
-
-          $sql = mysqli_query($connect,"SELECT * FROM proposta WHERE id_super = $super AND sitctrt = 'OK' AND situacao ='TECNICO'");
-          $linha = mysqli_fetch_array($sql);
-          $total = 0;
-          if ($linha >0):
-            do{
-              $dtInst = $linha['data_instalacao'];
-              if ($dtInst == $data_sql):
-                $ponto = $linha['ponto'];
-                $pontoM = $linha['pontoM'];
-                $total += $ponto + $pontoM;
-              endif;
-            } while($linha = mysqli_fetch_assoc($sql));
-          endif;
-
-          if ($total != 0):
-            echo "<td>$total</td>";
-          else:
-            echo "<td></td>";
-          endif;
-
-          $sql = mysqli_query($connect,"SELECT * FROM proposta WHERE id_super = $super AND sitctrt = 'OK' AND situacao ='BACKLOG'");
-          $linha = mysqli_fetch_array($sql);
-          $total = 0;
-          if ($linha >0):
-            do{
-              $dtInst = $linha['data_instalacao'];
-              if ($dtInst == $data_sql):
-                $ponto = $linha['ponto'];
-                $pontoM = $linha['pontoM'];
-                $total += $ponto + $pontoM;
-              endif;
-            } while($linha = mysqli_fetch_assoc($sql));
-          endif;
-
-          if ($total != 0):
-            echo "<td>$total</td>";
-          else:
-            echo "<td></td>";
-          endif;
-
-          echo "</tr>";
-        }
-
-        echo "</tbody>
-
-            </table>
-            </div>";
-
-       ?>
+              ?>
+        </div>
     </div>
   </div>
-</div>
+
+   <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true" id="previsao">
+    <div class="modal-dialog modal-xl" style="margin-left: 200px;">
+      <h4 style="color: #f0f0f0; font-size: 30px;">Previsão:</h4>
+        <div class="modal-content" style="padding: 20px; width: 800px;">
+
+          <?php
+
+            $qtdDiaMes = cal_days_in_month(CAL_GREGORIAN,date('m'),date('Y'));
+
+
+            echo "<div class=\"table-responsive-xl\">";
+            echo "<table class=\"table table-hover text-center text-truncate\">";
+            echo "<thead class=\"thead-dark\">";
+            echo "<tr>";
+
+            echo   "<th scope=\"col\">DATA</th>";
+            echo   "<th scope=\"col\">PONTUAÇÃO</th>";
+            echo   "<th scope=\"col\">ATIVOS</th>";
+            echo   "<th scope=\"col\">COMERCIAL</th>";
+            echo   "<th scope=\"col\">TECNICO</th>";
+            echo   "<th scope=\"col\">BACKLOG</th>";
+            echo "</tr>";
+            echo "</thead>";
+
+            echo "<tbody>";
+
+            for ($i = 1; $i <= $qtdDiaMes; $i++){
+              $data_incio = mktime(0, 0, 0, date('m') , $i , date('Y'));
+              $data_apr = date('d/m/Y',$data_incio);
+              $data_sql = date('Y-m-d',$data_incio);
+              $hoje = date('Y-m-d');
+
+              echo "<td>$data_apr</td>";
+              $super = $dados['id'];
+
+              $sql = mysqli_query($connect,"SELECT * FROM proposta WHERE id_super = $super AND sitctrt = 'OK'");
+              $linha = mysqli_fetch_array($sql);
+              $total = 0;
+              if ($linha >0):
+                do{
+                  $dtInst = $linha['data_instalacao'];
+                  if ($dtInst == $data_sql):
+                    $ponto = $linha['ponto'];
+                    $pontoM = $linha['pontoM'];
+                    $total += $ponto + $pontoM;
+                  endif;
+                } while($linha = mysqli_fetch_assoc($sql));
+              endif;
+
+              if ($total != 0):
+                echo "<td>$total</td>";
+              else:
+                echo "<td></td>";
+              endif;
+
+
+              $sql = mysqli_query($connect,"SELECT * FROM proposta WHERE id_super = $super AND sitctrt = 'OK' AND situacao ='ATIVO'");
+              $linha = mysqli_fetch_array($sql);
+              $total = 0;
+              if ($linha >0):
+                do{
+                  $dtInst = $linha['data_instalacao'];
+                  if ($dtInst == $data_sql):
+                    $ponto = $linha['ponto'];
+                    $pontoM = $linha['pontoM'];
+                    $total += $ponto + $pontoM;
+                  endif;
+                } while($linha = mysqli_fetch_assoc($sql));
+              endif;
+
+              if ($total != 0):
+                echo "<td>$total</td>";
+              else:
+                echo "<td></td>";
+              endif;
+
+              $sql = mysqli_query($connect,"SELECT * FROM proposta WHERE id_super = $super AND sitctrt = 'OK' AND situacao ='COMERCIAL'");
+              $linha = mysqli_fetch_array($sql);
+              $total = 0;
+              if ($linha >0):
+                do{
+                  $dtInst = $linha['data_instalacao'];
+                  if ($dtInst == $data_sql):
+                    $ponto = $linha['ponto'];
+                    $pontoM = $linha['pontoM'];
+                    $total += $ponto + $pontoM;
+                  endif;
+                } while($linha = mysqli_fetch_assoc($sql));
+              endif;
+
+              if ($total != 0):
+                echo "<td>$total</td>";
+              else:
+                echo "<td></td>";
+              endif;
+
+              $sql = mysqli_query($connect,"SELECT * FROM proposta WHERE id_super = $super AND sitctrt = 'OK' AND situacao ='TECNICO'");
+              $linha = mysqli_fetch_array($sql);
+              $total = 0;
+              if ($linha >0):
+                do{
+                  $dtInst = $linha['data_instalacao'];
+                  if ($dtInst == $data_sql):
+                    $ponto = $linha['ponto'];
+                    $pontoM = $linha['pontoM'];
+                    $total += $ponto + $pontoM;
+                  endif;
+                } while($linha = mysqli_fetch_assoc($sql));
+              endif;
+
+              if ($total != 0):
+                echo "<td>$total</td>";
+              else:
+                echo "<td></td>";
+              endif;
+
+              $sql = mysqli_query($connect,"SELECT * FROM proposta WHERE id_super = $super AND sitctrt = 'OK' AND situacao ='BACKLOG'");
+              $linha = mysqli_fetch_array($sql);
+              $total = 0;
+              if ($linha >0):
+                do{
+                  $dtInst = $linha['data_instalacao'];
+                  if ($dtInst == $data_sql):
+                    $ponto = $linha['ponto'];
+                    $pontoM = $linha['pontoM'];
+                    $total += $ponto + $pontoM;
+                  endif;
+                } while($linha = mysqli_fetch_assoc($sql));
+              endif;
+
+              if ($total != 0):
+                echo "<td>$total</td>";
+              else:
+                echo "<td></td>";
+              endif;
+
+              echo "</tr>";
+            }
+
+            echo "</tbody>
+
+                </table>
+                </div>";
+
+           ?>
+        </div>
+      </div>
+    </div>
+
+    <div id="diarioVendedor" class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+     <div class="modal-dialog modal-xl" style="margin-left: 200px;">
+       <h4 style="color: #f0f0f0; font-size: 30px;">Diário Vendedor:</h4>
+         <div class="modal-content" style="padding: 20px; width: 800px;">
+
+
+           <?php
+            $sql = mysqli_query($connect, "SELECT * FROM operador WHERE id_super = $super AND cargo = 'VENDEDOR'");
+            $linha = mysqli_fetch_array($sql);
+            do{
+              $operadores[] = array('idOperador' => $linha['id'],'nomeOperador' => $linha['login'] );
+            }while($linha = mysqli_fetch_assoc($sql));
+            $controle = count($operadores);
+
+            echo "<div class=\"table-responsive-xl\">";
+            echo "<table class=\"table table-hover text-center text-truncate\">";
+            echo "<thead class=\"thead-dark\">";
+            echo "<tr>";
+            echo "<th></th>";
+
+            for ($i = 1; $i <= $qtdDiaMes; $i++){
+              $data_incio = mktime(0, 0, 0, date('m') , $i , date('Y'));
+              $data_apr = date('d/m/Y',$data_incio);
+              echo   "<th scope=\"col\">$data_apr</th>";
+            };
+            echo "</tr>";
+            echo "</thead>";
+            echo "<tbody>";
+
+            for ($i=0; $i < $controle ; $i++) {
+              echo "<tr>";
+              $id_OP = $operadores[$i]['idOperador'];
+              $nome_OP = $operadores[$i]['nomeOperador'];
+              echo "<th scope=\"row\">$nome_OP</th>";
+
+              for ($iB = 1; $iB <= $qtdDiaMes; $iB++){
+                $data_incio = mktime(0, 0, 0, date('m') , $iB , date('Y'));
+                $data_apr = date('d/m/Y',$data_incio);
+                $data_sql = date('Y-m-d',$data_incio);
+
+                $sqlPontos = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $id_OP AND sitctrt = 'OK'");
+                $linhaPontos = mysqli_fetch_array($sqlPontos);
+
+                $total = 0;
+
+                if ($linhaPontos >0):
+                  do{
+                    $dtInst = $linhaPontos['data_instalacao'];
+                    if ($dtInst == $data_sql):
+                      $ponto = $linhaPontos['ponto'];
+                      $pontoM = $linhaPontos['pontoM'];
+                      $total += $ponto + $pontoM;
+                    endif;
+                  } while($linhaPontos = mysqli_fetch_assoc($sqlPontos));
+                endif;
+
+                if ($total != 0):
+                  echo "<td>$total</td>";
+                else:
+                  echo "<td></td>";
+                endif;
+
+              };
+              echo "</tr>";
+
+            };
+
+            echo "</tbody>";
+
+
+            echo "</table>";
+            echo "</div>";
+
+            ?>
+
+         </div>
+       </div>
+     </div>
+
+     <div id="rankingMes" class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl" style="margin-left: 200px;">
+        <h5 style="color: #f0f0f0; font-size: 30px;">Ranking:</h5>
+          <div class="modal-content" style="padding: 20px; width: 800px;" id="areaTeste">
+            <style media="screen">
+              #areaTeste{
+                display: flex;
+                flex-direction: row;
+              }
+
+              .atvMov{
+                margin-right: 20px;
+                padding: 20px;
+              }
+            </style>
+
+            <div class="atvMov" style="background-color: #98FB98;">
+              <?php
+                echo "<h6>Ativo: </h6>";
+                //Fazer lista de Id de Operadores do supervisor
+                $supervisor = $dados['id'];
+                $sql = mysqli_query($connect, "SELECT * FROM operador WHERE id_super = $supervisor AND cargo = 'VENDEDOR'");
+                $linha = mysqli_fetch_array($sql);
+
+                do{
+                  $idOperador = $linha['id'];
+                  $listaA[] = array('id' => $idOperador);
+                }while ($linha = mysqli_fetch_assoc($sql));
+                $contador = count($listaA);
+
+                $mes = date('m');
+
+
+                //Fazer Lista com Id e pontos do vendedor no dia
+                for ($i = 0; $i < $contador; $i++){
+                  $ponto = 0;
+                  $pontoM = 0;
+                  $idOperador2 = $listaA[$i]['id'];
+                  $sqlVendas = mysqli_query($connect,"SELECT * FROM proposta
+                    WHERE id_vendedor = '$idOperador2' AND situacao = 'ATIVO' AND MONTH(data_venda) = '$mes'");
+
+                  $linhaVendas = mysqli_fetch_array($sqlVendas);
+                  do {
+                    $ponto += $linhaVendas['ponto'];
+
+
+                  } while ($linhaVendas = mysqli_fetch_assoc($sqlVendas));
+
+
+                    $dataA[] = array('id' => $idOperador2, 'ponto' => $ponto);
+
+                    // Colocar lista 2 em ordem
+                    foreach ($dataA as $key => $row) {
+                        $idV[$key]  = $row['id'];
+                        $pontoGeralA[$key] = $row['ponto'];
+                    }
+
+                    array_multisort($pontoGeralA, SORT_DESC, $dataA);
+
+                };
+
+                $contador = count($dataA);
+                for ($i = 0; $i < $contador; $i++){
+                    $controle = $i + 1;
+                    $teste1 = $dataA[$i]['id'];
+
+                    $teste3 = mysqli_query($connect, "SELECT * FROM operador WHERE id = $teste1");
+                    $linhaTeste3 = mysqli_fetch_array($teste3);
+
+                    $nome = $linhaTeste3['login'];
+
+
+                    $teste2 = $dataA[$i]['ponto'];
+                    echo "$controle ª - $nome: $teste2<br>";
+                };
+
+
+
+               ?>
+            </div>
+
+            <div class="atvMov" style="background-color: #B0E0E6;">
+              <?php
+                echo "<h6>Ativo + Móvel: </h6>";
+                //Fazer lista de Id de Operadores do supervisor
+                $supervisor = $dados['id'];
+                $sql = mysqli_query($connect, "SELECT * FROM operador WHERE id_super = $supervisor AND cargo = 'VENDEDOR'");
+                $linha = mysqli_fetch_array($sql);
+
+                do{
+                  $idOperador = $linha['id'];
+                  $lista1[] = array('id' => $idOperador);
+                }while ($linha = mysqli_fetch_assoc($sql));
+                $contador = count($lista1);
+
+                $mes = date('m');
+
+
+                //Fazer Lista com Id e pontos do vendedor no dia
+                for ($i = 0; $i < $contador; $i++){
+                  $ponto = 0;
+                  $pontoM = 0;
+                  $idOperador2 = $lista1[$i]['id'];
+                  $sqlVendas = mysqli_query($connect,"SELECT * FROM proposta
+                    WHERE id_vendedor = '$idOperador2' AND situacao = 'ATIVO' AND MONTH(data_venda) = '$mes'");
+
+                  $linhaVendas = mysqli_fetch_array($sqlVendas);
+                  do {
+                    $ponto += $linhaVendas['ponto'];
+                    $pontoM += $linhaVendas['pontoM'];
+
+                  } while ($linhaVendas = mysqli_fetch_assoc($sqlVendas));
+                    $ponto += $pontoM;
+
+                    $data[] = array('id' => $idOperador2, 'ponto' => $ponto);
+
+                    // Colocar lista 2 em ordem
+                    foreach ($data as $key => $row) {
+                        $idV[$key]  = $row['id'];
+                        $pontoGeral[$key] = $row['ponto'];
+                    }
+
+                    array_multisort($pontoGeral, SORT_DESC, $data);
+
+                };
+
+                $contador = count($data);
+                for ($i = 0; $i < $contador; $i++){
+                    $controle = $i + 1;
+                    $teste1 = $data[$i]['id'];
+
+                    $teste3 = mysqli_query($connect, "SELECT * FROM operador WHERE id = $teste1");
+                    $linhaTeste3 = mysqli_fetch_array($teste3);
+
+                    $nome = $linhaTeste3['login'];
+
+
+                    $teste2 = $data[$i]['ponto'];
+                    echo "$controle ª - $nome: $teste2<br>";
+                };
+
+
+
+               ?>
+            </div>
+
+
+        </div>
+      </div>
+    </div>
 
    <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="novoOperador">
     <div class="modal-dialog modal-sm">
@@ -479,21 +949,23 @@
     <?php
       //Fazer lista de Id de Operadores do supervisor
 
+
+
       $sql = mysqli_query($connect, "SELECT * FROM operador WHERE id_super = $supervisor AND cargo = 'VENDEDOR'");
       $linha = mysqli_fetch_array($sql);
 
       do{
         $idOperador = $linha['id'];
-        $lista1[] = array('id' => $idOperador);
+        $listaB1[] = array('id' => $idOperador);
       }while ($linha = mysqli_fetch_assoc($sql));
-      $contador = count($lista1);
+      $contador = count($listaB1);
 
 
       //Fazer Lista com Id e pontos do vendedor no dia
       for ($i = 0; $i < $contador; $i++){
         $ponto = 0;
         $pontoM = 0;
-        $idOperador2 = $lista1[$i]['id'];
+        $idOperador2 = $listaB1[$i]['id'];
         $sqlVendas = mysqli_query($connect,"SELECT * FROM proposta
           WHERE id_vendedor = '$idOperador2' AND situacao = 'APROVADO' AND data_venda = '$hoje'
           OR id_vendedor = '$idOperador2' AND situacao = 'APROVADO DIVERGENTE' AND data_venda = '$hoje'");
@@ -506,10 +978,10 @@
         } while ($linhaVendas = mysqli_fetch_assoc($sqlVendas));
           $ponto += $pontoM;
 
-          $data[] = array('id' => $idOperador2, 'ponto' => $ponto);
+          $data2[] = array('id' => $idOperador2, 'ponto' => $ponto);
 
           // Colocar lista 2 em ordem
-          foreach ($data as $key => $row) {
+          foreach ($data2 as $key => $row) {
               $idV[$key]  = $row['id'];
               $pontoGeral[$key] = $row['ponto'];
           }
@@ -518,10 +990,10 @@
 
       };
 
-      $contador = count($data);
+      $contador = count($data2);
       for ($i = 0; $i < $contador; $i++){
           $controle = $i + 1;
-          $teste1 = $data[$i]['id'];
+          $teste1 = $data2[$i]['id'];
 
           $teste3 = mysqli_query($connect, "SELECT * FROM operador WHERE id = $teste1");
           $linhaTeste3 = mysqli_fetch_array($teste3);
@@ -529,7 +1001,7 @@
           $nome = $linhaTeste3['login'];
 
 
-          $teste2 = $data[$i]['ponto'];
+          $teste2 = $data2[$i]['ponto'];
           echo "$controle ª - $nome: $teste2<br>";
       };
 
@@ -537,7 +1009,7 @@
 
   </div>
 
-    <div id="ranking" style="width: 400px; padding: 10px; background-color: #DCDCDC; float: right; clear: right;;">
+    <div id="pendencias" style="width: 400px; padding: 10px; background-color: #DCDCDC; float: right; clear: right;;">
       <h5>Pendências:</h5>
 
       <?php
@@ -726,7 +1198,7 @@
 
     </div>
 
-    <div id="ranking" style="width: 400px; padding: 10px; background-color: #DCDCDC; float: right; clear: right; margin-top: 17px;">
+    <div id="instalacoes" style="width: 400px; padding: 10px; background-color: #DCDCDC; float: right; clear: right; margin-top: 17px;">
       <h5>Instalações:</h5>
 
       <?php
