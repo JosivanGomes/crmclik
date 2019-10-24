@@ -70,9 +70,20 @@
            </li>
 
 
+
            <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Operação</a>
               <div class="dropdown-menu">
+                <a class="dropdown-item" href="cancelado.php">Cancelados</a>
+                <a class="dropdown-item" href="pendenciasuper.php">Pendências
+                  <span class="badge badge-danger">
+                    <?php
+                      $supervisor = $dados['id'];
+                      $sql = mysqli_query($connect, "SELECT * FROM proposta WHERE id_super = '$supervisor' AND sitctrt = 'N-OK' AND situacao = 'APROVADO' OR situacao = 'CHAMADO' OR situacao = 'CHECK OK'") or print mysql_error();
+                      echo mysqli_num_rows($sql);
+                    ?>
+                  </span>
+                </a>
                 <a class="dropdown-item" href="dashboard.php">DashBoard</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" data-target=".bd-example-modal-lg">
@@ -221,7 +232,7 @@
                    data = $.parseJSON(data);
                    $("#telaPrincipal").html("");
                    $("#telaPrincipal").append(data.retorno);
-                   
+
 
                }
 

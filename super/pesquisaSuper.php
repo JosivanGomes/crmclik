@@ -28,8 +28,12 @@
   $sql = "SELECT * FROM proposta WHERE ";
 
   if ($sitVenda != "GERAL"):
-    $sql = $sql."situacao = '$sitVenda'";
-  endif;
+    if ($sitVenda == "PENDENCIAS"):
+      $sql = $sql."situacao != 'BACKLOG' AND situacao != 'TECNICO' AND situacao != 'COMERCIAL' AND situacao != 'CANCELADO' AND situacao != 'APROVADO' AND situacao != 'ATIVO'";
+    else:
+      $sql = $sql."situacao = '$sitVenda'";
+    endif;
+endif;
 
   if ($venda != 'TODOS'):
     if ($sitVenda != "GERAL"):

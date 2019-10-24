@@ -75,7 +75,11 @@
          <img src="img/trofeu.jpg" alt="Ranking" title="Ranking" class="rounded-circle" style="width: 45px; background-color: #f0f0f0;">
        </a>
 
-         <ul class="navbar-nav" style="margin-left: 390px">
+       <a data-toggle="modal" data-target="#DashB" href="#">
+         <img src="img/dashB.png" alt="Dash Board Diário" title="Dash Board Diário" class="rounded-circle" style="width: 45px; background-color: #f0f0f0;">
+       </a>
+
+         <ul class="navbar-nav" style="margin-left: 300px">
 
 
            <li class="nav-item dropdown">
@@ -91,6 +95,15 @@
               <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Operação</a>
               <div class="dropdown-menu">
                 <a class="dropdown-item" href="cancelado.php">Cancelados</a>
+                <a class="dropdown-item" href="pendenciasuper.php">Pendências
+                  <span class="badge badge-danger">
+                    <?php
+                      $supervisor = $dados['id'];
+                      $sql = mysqli_query($connect, "SELECT * FROM proposta WHERE id_super = '$supervisor' AND sitctrt = 'N-OK' AND situacao = 'APROVADO' OR situacao = 'CHAMADO' OR situacao = 'CHECK OK'") or print mysql_error();
+                      echo mysqli_num_rows($sql);
+                    ?>
+                  </span>
+                </a>
                 <a class="dropdown-item" href="dashboard.php">DashBoard</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" data-target=".bd-example-modal-lg">
@@ -109,6 +122,87 @@
 
      </nav>
    </header>
+
+
+
+    <div id="DashB" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-sm">
+        <h4 style="color: #f0f0f0; font-size: 30px;">Dash Board Diário:</h4>
+        <div class="modal-content" style="padding: 20px;">
+          <table class="table" style="text-align: center;">
+            <tr>
+                <th scope="col">Pontos Aprovados</th>
+                <?php
+                $hoje = date('Y-m-d');
+                $super = $dados['id'];
+
+                $sql = mysqli_query($connect,"SELECT * FROM proposta WHERE id_super = $super AND data_venda = '$hoje' AND sitctrt = 'OK' AND (situacao = 'APROVADO' OR situacao = 'APROVADO DIVERGENTE')");
+                $linha = mysqli_fetch_array($sql);
+                $ponto = 0;
+                $pontoM = 0;
+                if ($linha > 0):
+                  do{
+                    $ponto = $linha['ponto'];
+                    $pontoM = $linha['pontoM'];
+                    $total = $pontoM + $ponto;
+
+                  } while($linha = mysqli_fetch_assoc($sql));
+                endif;
+
+                echo "<td>$ponto</td>";
+                echo "<td>$pontoM</td>";
+
+
+                 ?>
+
+            </tr>
+            <tr>
+                <th scope="col">Quantidade Tv</th>
+
+                <?php
+                $sql = mysqli_query($connect, "SELECT * FROM proposta WHERE id_super = '$super' AND
+                   (situacao = 'APROVADO' OR situacao = 'APROVADO DIVERGENTE') AND data_venda = '$hoje' AND tv != 'NULL'") or print mysql_error();
+                $linhaSUM = mysqli_num_rows($sql);
+
+                echo "<td colspan=\"2\">$linhaSUM</td>";
+                 ?>
+
+            </tr>
+            <tr>
+                <th scope="col">Quantidade Móvel</th>
+
+                <?php
+                $sql = mysqli_query($connect, "SELECT * FROM proposta WHERE id_super = '$super' AND
+                   (situacao = 'APROVADO' OR situacao = 'APROVADO DIVERGENTE') AND data_venda = '$hoje' AND movel != 'NULL'") or print mysql_error();
+                $linhaSUM = mysqli_num_rows($sql);
+
+                echo "<td colspan=\"2\">$linhaSUM</td>";
+                 ?>
+            </tr>
+            <tr>
+                <th scope="col">Quantidade Geral</th>
+                <?php
+                $sql = mysqli_query($connect, "SELECT * FROM proposta WHERE id_super = '$super' AND
+                   (situacao = 'APROVADO' OR situacao = 'APROVADO DIVERGENTE') AND data_venda = '$hoje'") or print mysql_error();
+                $linhaSUM = mysqli_num_rows($sql);
+
+                echo "<td colspan=\"2\">$linhaSUM</td>";
+                 ?>
+            </tr>
+            <tr>
+                <th scope="col">Pendências</th>
+                <?php
+                $sql = mysqli_query($connect, "SELECT * FROM proposta WHERE id_super = '$super' AND
+                   situacao != 'APROVADO' AND situacao != 'APROVADO DIVERGENTE' AND situacao != 'NEGADO' AND data_venda = '$hoje'") or print mysql_error();
+                $linhaSUM = mysqli_num_rows($sql);
+
+                echo "<td colspan=\"2\">$linhaSUM</td>";
+                 ?>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
 
    <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true" id="agenda">
     <div class="modal-dialog modal-xl" style="margin-left: 200px;">
