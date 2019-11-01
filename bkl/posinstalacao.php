@@ -68,8 +68,8 @@
            <li>
              <a href="pendenciabko.php" class="btn btn-primary" role="button" aria-pressed="true">Pendências <span class="badge badge-danger">
                 <?php
-                  $con = mysqli_connect("localhost", "root", "", "crmclik");
-                  $sql = mysqli_query($con, "SELECT * FROM proposta WHERE sitctrt = 'N-OK' AND situacao = 'APROVADO' OR situacao = 'CHAMADO' OR situacao = 'CHECK OK'") or print mysql_error();
+                  
+                  $sql = mysqli_query($connect, "SELECT * FROM proposta WHERE sitctrt = 'N-OK' AND situacao = 'APROVADO' OR situacao = 'CHAMADO' OR situacao = 'CHECK OK'") or print mysql_error();
                   echo mysqli_num_rows($sql);
                 ?>
               </span>
@@ -96,8 +96,8 @@
    <?php
      $vendedor = $dados["id"];
      $nmvendedor = $dados["login"];
-     $con = mysqli_connect("localhost", "root", "", "crmclik");
-     $sql = mysqli_query($con, "SELECT * FROM proposta WHERE id_bkoPend = '{$vendedor}' AND situacao = 'EM TRATAMENTO'") or print mysql_error();
+     
+     $sql = mysqli_query($connect, "SELECT * FROM proposta WHERE id_bkoPend = '{$vendedor}' AND situacao = 'EM TRATAMENTO'") or print mysql_error();
      $linha = mysqli_fetch_array($sql);
 
      echo "<h4>Pessoal:</h4>";
@@ -143,7 +143,7 @@
 
 
          $clienteCpf = $linha["cpf_cliente"];
-         $sqlC = mysqli_query($con, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
+         $sqlC = mysqli_query($connect, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
          $linhaC = mysqli_fetch_array($sqlC);
          $idVenda = $linha["id"];
 
@@ -216,13 +216,13 @@
              echo   "<td>$sitcontrato</td>";
 
              $idVendedor = $linha["id_vendedor"];
-             $sqlV = mysqli_query($con, "SELECT * FROM operador WHERE id = '{$idVendedor}'") or print mysql_error();
+             $sqlV = mysqli_query($connect, "SELECT * FROM operador WHERE id = '{$idVendedor}'") or print mysql_error();
              $linhaV = mysqli_fetch_array($sqlV);
              $nmVend = $linhaV["login"];
              echo   "<td>$nmVend</td>";
 
              $idSuper = $linhaV["id_super"];
-             $sqlS = mysqli_query($con, "SELECT * FROM supervisor WHERE id = '{$idSuper}'") or print mysql_error();
+             $sqlS = mysqli_query($connect, "SELECT * FROM supervisor WHERE id = '{$idSuper}'") or print mysql_error();
              $linhaS = mysqli_fetch_array($sqlS);
              $nmSup = $linhaS["login"];
              echo   "<td>$nmSup</td>";
@@ -405,7 +405,7 @@
 
    $hoje = date('Y-m-d');
 
-   $sql = mysqli_query($con, "SELECT * FROM proposta WHERE situacao = 'APROVADO' and data_instalacao <= '$hoje'") or print mysql_error();
+   $sql = mysqli_query($connect, "SELECT * FROM proposta WHERE situacao = 'APROVADO' and data_instalacao <= '$hoje'") or print mysql_error();
    $linha = mysqli_fetch_array($sql);
 
 
@@ -445,7 +445,7 @@
      do {
 
        $clienteCpf = $linha["cpf_cliente"];
-       $sqlC = mysqli_query($con, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
+       $sqlC = mysqli_query($connect, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
        $linhaC = mysqli_fetch_array($sqlC);
 
        $idVenda = $linha["id"];
@@ -462,13 +462,13 @@
 
 
          $idVendedor = $linha["id_vendedor"];
-         $sqlV = mysqli_query($con, "SELECT * FROM operador WHERE id = '{$idVendedor}'") or print mysql_error();
+         $sqlV = mysqli_query($connect, "SELECT * FROM operador WHERE id = '{$idVendedor}'") or print mysql_error();
          $linhaV = mysqli_fetch_array($sqlV);
          $nmVend = $linhaV["login"];
          echo   "<td>$nmVend</td>";
 
          $idSuper = $linhaV["id_super"];
-         $sqlS = mysqli_query($con, "SELECT * FROM supervisor WHERE id = '{$idSuper}'") or print mysql_error();
+         $sqlS = mysqli_query($connect, "SELECT * FROM supervisor WHERE id = '{$idSuper}'") or print mysql_error();
          $linhaS = mysqli_fetch_array($sqlS);
          $nmSup = $linhaS["login"];
          echo   "<td>$nmSup</td>";
@@ -586,7 +586,7 @@
 
   $hoje = date('Y-m-d');
 
-  $sql = mysqli_query($con, "SELECT * FROM proposta WHERE situacao = 'APROVADO' and data_instalacao > '$hoje'") or print mysql_error();
+  $sql = mysqli_query($connect, "SELECT * FROM proposta WHERE situacao = 'APROVADO' and data_instalacao > '$hoje'") or print mysql_error();
   $linha = mysqli_fetch_array($sql);
 
 
@@ -625,7 +625,7 @@
     do {
 
       $clienteCpf = $linha["cpf_cliente"];
-      $sqlC = mysqli_query($con, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
+      $sqlC = mysqli_query($connect, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
       $linhaC = mysqli_fetch_array($sqlC);
 
       $idVenda = $linha["id"];
@@ -637,13 +637,13 @@
 
 
         $idVendedor = $linha["id_vendedor"];
-        $sqlV = mysqli_query($con, "SELECT * FROM operador WHERE id = '{$idVendedor}'") or print mysql_error();
+        $sqlV = mysqli_query($connect, "SELECT * FROM operador WHERE id = '{$idVendedor}'") or print mysql_error();
         $linhaV = mysqli_fetch_array($sqlV);
         $nmVend = $linhaV["login"];
         echo   "<td>$nmVend</td>";
 
         $idSuper = $linhaV["id_super"];
-        $sqlS = mysqli_query($con, "SELECT * FROM supervisor WHERE id = '{$idSuper}'") or print mysql_error();
+        $sqlS = mysqli_query($connect, "SELECT * FROM supervisor WHERE id = '{$idSuper}'") or print mysql_error();
         $linhaS = mysqli_fetch_array($sqlS);
         $nmSup = $linhaS["login"];
         echo   "<td>$nmSup</td>";

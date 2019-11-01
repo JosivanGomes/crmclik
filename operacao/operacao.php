@@ -354,11 +354,14 @@
 
 
       <?php
+        $hoje = date('Y-m-d');
         $vendedor = $dados["id"];
         $nmvendedor = $dados["login"];
-        $con = mysqli_connect("localhost", "root", "", "crmclik");
-        $sql = mysqli_query($con, "SELECT * FROM proposta WHERE id_vendedor = '{$vendedor}' AND situacao = 'SEM CONTATO' OR id_vendedor = '{$vendedor}' AND situacao = 'RETORNO VENDEDOR' OR id_vendedor = '{$vendedor}' AND situacao = 'EM TRATAMENTO' OR id_vendedor = '{$vendedor}' AND situacao = 'CHECK OK' OR id_vendedor = '{$vendedor}' AND situacao = 'CADASTRO OK'") or print mysql_error();
+        
+        $sql = mysqli_query($connect, "SELECT * FROM proposta WHERE id_vendedor = $vendedor AND data_venda = '$hoje'") or print mysql_error();
         $linha = mysqli_fetch_array($sql);
+
+
 
 
 
@@ -397,7 +400,7 @@
           do {
 
             $clienteCpf = $linha["cpf_cliente"];
-            $sqlC = mysqli_query($con, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
+            $sqlC = mysqli_query($connect, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
             $linhaC = mysqli_fetch_array($sqlC);
 
 
@@ -505,7 +508,7 @@
               echo   "<td>$pontuacaoMovel</td>";
 
               $idBko = $linha["id_bko"];
-              $sqlB = mysqli_query($con, "SELECT * FROM operador WHERE id = '{$idBko}'") or print mysql_error();
+              $sqlB = mysqli_query($connect, "SELECT * FROM operador WHERE id = '{$idBko}'") or print mysql_error();
               $linhaB = mysqli_fetch_array($sqlB);
               $nmBko = $linhaB["login"];
               echo   "<td>$nmBko</td>";

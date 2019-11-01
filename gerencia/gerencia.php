@@ -12,7 +12,7 @@
 
   //Dados
   $id = $_SESSION['id_usuario'];
-  $sql = "SELECT * FROM supervisor WHERE id = '$id'";
+  $sql = "SELECT * FROM gerencia WHERE id = '$id'";
   $resultado = mysqli_query($connect, $sql);
   $dados = mysqli_fetch_array($resultado);
 
@@ -83,7 +83,7 @@
 
 
            <li class="nav-item dropdown">
-             <a class="nav-link" href="super.php">Home</a>
+             <a class="nav-link" href="gerencia.php">Home</a>
            </li>
 
            <li class="nav-item dropdown">
@@ -107,7 +107,7 @@
                 <a class="dropdown-item" href="dashboard.php">DashBoard</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" data-target=".bd-example-modal-lg">
-                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#novoOperador">Cadastrar novo operador</button>
+                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#novoOperador">Cadastrar novo supervisor</button>
                 </a>
               </div>
            </li>
@@ -211,10 +211,10 @@
             <?php
 
             $hoje = date('Y-m-d');
-            $supervisor = $dados["id"];
 
 
-            $sql = mysqli_query($connect, "SELECT * FROM proposta WHERE id_super = '{$supervisor}' AND situacao = 'APROVADO' AND data_instalacao > '$hoje'") or print mysql_error();
+
+            $sql = mysqli_query($connect, "SELECT * FROM proposta WHERE situacao = 'APROVADO' AND data_instalacao > '$hoje'") or print mysql_error();
             $linha = mysqli_fetch_array($sql);
 
 
@@ -243,7 +243,8 @@
 
             for ($i=0; $i < $contador; $i++) {
               $diaInst = $listaInstalacao[$i];
-              $sql = mysqli_query($connect, "SELECT * FROM proposta WHERE id_super = '{$supervisor}' AND data_instalacao = '$diaInst'") or print mysql_error();
+
+              $sql = mysqli_query($connect, "SELECT * FROM proposta WHERE data_instalacao = '$diaInst'") or print mysql_error();
               $linha = mysqli_fetch_array($sql);
 
 
@@ -258,6 +259,7 @@
                 echo "<tr>";
 
                 echo   "<th scope=\"col\">Vendedor</th>";
+                echo   "<th scope=\"col\">Supervisor</th>";
                 echo   "<th scope=\"col\">Status</th>";
                 echo   "<th scope=\"col\">Data Instalação</th>";
                 echo   "<th scope=\"col\">Turno</th>";
@@ -295,6 +297,8 @@
 
                    $nmVendedor = $linhaV['login'];
                     echo "<td>$nmVendedor</td>";
+
+
 
                     $status = $linha["situacao"];
                     echo   "<td>$status</td>";
@@ -466,7 +470,7 @@
               echo "<td>$data_apr</td>";
               $super = $dados['id'];
 
-              $sql = mysqli_query($connect,"SELECT * FROM proposta WHERE id_super = $super AND sitctrt = 'OK'");
+              $sql = mysqli_query($connect,"SELECT * FROM proposta");
               $linha = mysqli_fetch_array($sql);
               $total = 0;
               if ($linha >0):
@@ -487,7 +491,7 @@
               endif;
 
 
-              $sql = mysqli_query($connect,"SELECT * FROM proposta WHERE id_super = $super AND sitctrt = 'OK' AND situacao ='ATIVO'");
+              $sql = mysqli_query($connect,"SELECT * FROM proposta WHERE situacao ='ATIVO'");
               $linha = mysqli_fetch_array($sql);
               $total = 0;
               if ($linha >0):
@@ -507,7 +511,7 @@
                 echo "<td></td>";
               endif;
 
-              $sql = mysqli_query($connect,"SELECT * FROM proposta WHERE id_super = $super AND sitctrt = 'OK' AND situacao ='COMERCIAL'");
+              $sql = mysqli_query($connect,"SELECT * FROM proposta WHERE situacao ='COMERCIAL'");
               $linha = mysqli_fetch_array($sql);
               $total = 0;
               if ($linha >0):
@@ -527,7 +531,7 @@
                 echo "<td></td>";
               endif;
 
-              $sql = mysqli_query($connect,"SELECT * FROM proposta WHERE id_super = $super AND sitctrt = 'OK' AND situacao ='TECNICO'");
+              $sql = mysqli_query($connect,"SELECT * FROM proposta WHERE situacao ='TECNICO'");
               $linha = mysqli_fetch_array($sql);
               $total = 0;
               if ($linha >0):
@@ -547,7 +551,7 @@
                 echo "<td></td>";
               endif;
 
-              $sql = mysqli_query($connect,"SELECT * FROM proposta WHERE id_super = $super AND sitctrt = 'OK' AND situacao ='BACKLOG'");
+              $sql = mysqli_query($connect,"SELECT * FROM proposta WHERE situacao ='BACKLOG'");
               $linha = mysqli_fetch_array($sql);
               $total = 0;
               if ($linha >0):
@@ -829,7 +833,7 @@
             <input type="password" class="form-control" id="senhaOperador">
           </div>
 
-          <button type="button" class="btn btn-primary" data-toggle="modal" onclick="incluiOperador()">Enviar</button>
+          <button type="button" class="btn btn-primary" data-toggle="modal" onclick="incluiSupervisor()">Enviar</button>
 
           <div id="resultado">
 
@@ -849,170 +853,186 @@
    <div style="width: 600px; padding: 10px; margin: 0;float: left; background-color: #DCDCDC;">
      <h4>Vendas do dia: </h4>
    <?php
-   $hoje = date('Y-m-d');
-   $supervisor = $dados["id"];
-   $sql = mysqli_query($connect, "SELECT * FROM proposta WHERE id_super = '{$supervisor}' AND data_venda = '$hoje'") or print mysql_error();
+   $sql = $sql = mysqli_query($connect, "SELECT * FROM supervisor") or print mysql_error();
    $linha = mysqli_fetch_array($sql);
 
+   do {
+     $idSupervisor = $linha['id'];
+     $nomeSupervisor = $linha['login'];
+     $dadosSupervisor[]= array('idSuper' => $idSupervisor, 'nomeSuper' => $nomeSupervisor);
+   } while ($linha = mysqli_fetch_assoc($sql));
+   $controleGerencia = count($dadosSupervisor);
+
+   for ($i=0; $i < $controleGerencia; $i++) {
+
+     $nomeSupervisor = $dadosSupervisor[$i]['nomeSuper'];
+     $supervisor = $dadosSupervisor[$i]['idSuper'];
+
+     $hoje = date('Y-m-d');
+
+     $sql = mysqli_query($connect, "SELECT * FROM proposta WHERE data_venda = '$hoje' AND id_super = $supervisor") or print mysql_error();
+     $linha = mysqli_fetch_array($sql);
 
 
-   $contrato= $linha["contrato"];
 
-   if(mysqli_num_rows($sql)>0):
-     echo "<div class=\"table-responsive-xl\">";
-     echo "<table class=\"table table-hover text-center text-truncate\">";
-     echo "<thead class=\"thead-dark\">";
-     echo "<tr>";
+     $contrato= $linha["contrato"];
+     echo "<h4>$nomeSupervisor:</h4>";
+     if(mysqli_num_rows($sql)>0):
 
-     echo   "<th scope=\"col\">Vendedor</th>";
-     echo   "<th scope=\"col\">Status</th>";
-     echo   "<th scope=\"col\">Data Instalação</th>";
-     echo   "<th scope=\"col\">Turno</th>";
-     echo   "<th scope=\"col\">Inst Chamado</th>";
-     echo   "<th scope=\"col\">Cidade</th>";
-     echo   "<th scope=\"col\">Contrato</th>";
-     echo   "<th scope=\"col\">Data Venda</th>";
-     echo   "<th scope=\"col\">CPF Cliente</th>";
-     echo   "<th scope=\"col\">Cliente</th>";
-     echo   "<th scope=\"col\">Fone1</th>";
-     echo   "<th scope=\"col\">Fone2</th>";
-     echo   "<th scope=\"col\">Tv</th>";
-     echo   "<th scope=\"col\">Pt Adc Tv</th>";
-     echo   "<th scope=\"col\">Internet</th>";
-     echo   "<th scope=\"col\">Fone</th>";
-     echo   "<th scope=\"col\">Móvel</th>";
-     echo   "<th scope=\"col\">Valor</th>";
-     echo   "<th scope=\"col\">Pontuação</th>";
-     echo   "<th scope=\"col\">Pontuação - Móvel</th>";
-     echo   "<th scope=\"col\">BackOffice</th>";
-     echo "</tr>";
-     echo "</thead>";
+       echo "<div class=\"table-responsive-xl\">";
+       echo "<table class=\"table table-hover text-center text-truncate\">";
+       echo "<thead class=\"thead-dark\">";
+       echo "<tr>";
 
-     echo "<tbody>";
-     //Lembrete = tentar fazer uma nova tabela a cada ciclo
-     do {
+       echo   "<th scope=\"col\">Vendedor</th>";
+       echo   "<th scope=\"col\">Status</th>";
+       echo   "<th scope=\"col\">Data Instalação</th>";
+       echo   "<th scope=\"col\">Turno</th>";
+       echo   "<th scope=\"col\">Inst Chamado</th>";
+       echo   "<th scope=\"col\">Cidade</th>";
+       echo   "<th scope=\"col\">Contrato</th>";
+       echo   "<th scope=\"col\">Data Venda</th>";
+       echo   "<th scope=\"col\">CPF Cliente</th>";
+       echo   "<th scope=\"col\">Cliente</th>";
+       echo   "<th scope=\"col\">Fone1</th>";
+       echo   "<th scope=\"col\">Fone2</th>";
+       echo   "<th scope=\"col\">Tv</th>";
+       echo   "<th scope=\"col\">Pt Adc Tv</th>";
+       echo   "<th scope=\"col\">Internet</th>";
+       echo   "<th scope=\"col\">Fone</th>";
+       echo   "<th scope=\"col\">Móvel</th>";
+       echo   "<th scope=\"col\">Valor</th>";
+       echo   "<th scope=\"col\">Pontuação</th>";
+       echo   "<th scope=\"col\">Pontuação - Móvel</th>";
+       echo   "<th scope=\"col\">BackOffice</th>";
+       echo "</tr>";
+       echo "</thead>";
 
-       $clienteCpf = $linha["cpf_cliente"];
-       $sqlC = mysqli_query($connect, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
-       $linhaC = mysqli_fetch_array($sqlC);
+       echo "<tbody>";
+       //Lembrete = tentar fazer uma nova tabela a cada ciclo
+       do {
 
-       $vendedor = $linha["id_vendedor"];
-       $sqlV = mysqli_query($connect, "SELECT * FROM operador WHERE id = '{$vendedor}'") or print mysql_error();
-       $linhaV = mysqli_fetch_array($sqlV);
+         $clienteCpf = $linha["cpf_cliente"];
+         $sqlC = mysqli_query($connect, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
+         $linhaC = mysqli_fetch_array($sqlC);
 
-        $nmVendedor = $linhaV['login'];
-         echo "<td>$nmVendedor</td>";
+         $vendedor = $linha["id_vendedor"];
+         $sqlV = mysqli_query($connect, "SELECT * FROM operador WHERE id = '{$vendedor}'") or print mysql_error();
+         $linhaV = mysqli_fetch_array($sqlV);
 
-         $status = $linha["situacao"];
-         echo   "<td>$status</td>";
+          $nmVendedor = $linhaV['login'];
+           echo "<td>$nmVendedor</td>";
 
-         $dtInstala = $linha["data_instalacao"];
-         if(empty($dtInstala)):
-           echo   "<td>$dtInstala</td>";
-         else:
-           $newDate = date("d/m/Y", strtotime($dtInstala));
-           echo   "<td>$newDate</td>";
-         endif;
+           $status = $linha["situacao"];
+           echo   "<td>$status</td>";
 
-           $turnoInst = $linha["turnoinst"];
-           if ($turnoInst == "NULL"):
-             echo "<td></td>";
+           $dtInstala = $linha["data_instalacao"];
+           if(empty($dtInstala)):
+             echo   "<td>$dtInstala</td>";
            else:
-             echo   "<td>$turnoInst</td>";
+             $newDate = date("d/m/Y", strtotime($dtInstala));
+             echo   "<td>$newDate</td>";
            endif;
 
-           $chamadoinst = $linha["chamadoinst"];
-           if ($chamadoinst == "NULL"):
-             echo "<td></td>";
+             $turnoInst = $linha["turnoinst"];
+             if ($turnoInst == "NULL"):
+               echo "<td></td>";
+             else:
+               echo   "<td>$turnoInst</td>";
+             endif;
+
+             $chamadoinst = $linha["chamadoinst"];
+             if ($chamadoinst == "NULL"):
+               echo "<td></td>";
+             else:
+               echo   "<td>$chamadoinst</td>";
+             endif;
+
+
+
+             $localCidade = $linhaC["cidade"];
+             echo   "<td>$localCidade</td>";
+
+             $contratoC = $linha["contrato"];
+             echo   "<td>$contratoC</td>";
+
+
+
+           $dtVenda = $linha["data_venda"];
+           if(empty($dtVenda)):
+             echo   "<td>$dtVenda</td>";
            else:
-             echo   "<td>$chamadoinst</td>";
+             $newDate = date("d/m/Y", strtotime($dtVenda));
+             echo   "<td>$newDate</td>";
            endif;
 
+           echo   "<td>$clienteCpf</td>";
 
 
-           $localCidade = $linhaC["cidade"];
-           echo   "<td>$localCidade</td>";
+           $nmcliente = $linhaC["nome"];
+           echo   "<td>$nmcliente</td>";
 
-           $contratoC = $linha["contrato"];
-           echo   "<td>$contratoC</td>";
+           $F1Cliente = $linhaC["telfixo"];
+           echo   "<td>$F1Cliente</td>";
 
+           $F2Cliente = $linhaC["telmovel"];
+           echo   "<td>$F2Cliente</td>";
 
+           $planoTv = $linha["tv"];
+           if ($planoTv == "NULL"):
+             echo   "<td></td>";
+           else:
+             echo "<td>$planoTv</td>";
+           endif;
 
-         $dtVenda = $linha["data_venda"];
-         if(empty($dtVenda)):
-           echo   "<td>$dtVenda</td>";
-         else:
-           $newDate = date("d/m/Y", strtotime($dtVenda));
-           echo   "<td>$newDate</td>";
-         endif;
+           $pontoTv = $linha["pt_adc_tv"];
+           if ($pontoTv == 0):
+             echo "<td></td>";
+           else:
+             echo   "<td>$pontoTv</td>";
+           endif;
 
-         echo   "<td>$clienteCpf</td>";
+           $net = $linha["internet"];
+           if ($net == "NULL"):
+             echo "<td></td>";
+           else:
+             echo   "<td>$net</td>";
+           endif;
 
+           $fone = $linha["telefone"];
+           if ($fone == "NULL"):
+             echo "<td></td>";
+           else:
+             echo   "<td>$fone</td>";
+           endif;
 
-         $nmcliente = $linhaC["nome"];
-         echo   "<td>$nmcliente</td>";
+           $movel = $linha["movel"];
+           if ($movel == "NULL"):
+             echo "<td></td>";
+           else:
+             echo   "<td>$movel</td>";
+           endif;
 
-         $F1Cliente = $linhaC["telfixo"];
-         echo   "<td>$F1Cliente</td>";
-
-         $F2Cliente = $linhaC["telmovel"];
-         echo   "<td>$F2Cliente</td>";
-
-         $planoTv = $linha["tv"];
-         if ($planoTv == "NULL"):
-           echo   "<td></td>";
-         else:
-           echo "<td>$planoTv</td>";
-         endif;
-
-         $pontoTv = $linha["pt_adc_tv"];
-         if ($pontoTv == 0):
-           echo "<td></td>";
-         else:
-           echo   "<td>$pontoTv</td>";
-         endif;
-
-         $net = $linha["internet"];
-         if ($net == "NULL"):
-           echo "<td></td>";
-         else:
-           echo   "<td>$net</td>";
-         endif;
-
-         $fone = $linha["telefone"];
-         if ($fone == "NULL"):
-           echo "<td></td>";
-         else:
-           echo   "<td>$fone</td>";
-         endif;
-
-         $movel = $linha["movel"];
-         if ($movel == "NULL"):
-           echo "<td></td>";
-         else:
-           echo   "<td>$movel</td>";
-         endif;
-
-         $precoP = number_format($linha["preco"], 2, '.', '');
-           echo   "<td>R$ $precoP</td>";
+           $precoP = number_format($linha["preco"], 2, '.', '');
+             echo   "<td>R$ $precoP</td>";
 
 
 
 
 
-         $pontuacao = $linha["ponto"];
-         echo   "<td>$pontuacao</td>";
+           $pontuacao = $linha["ponto"];
+           echo   "<td>$pontuacao</td>";
 
-         $pontuacaoMovel = $linha["pontoM"];
-         echo   "<td>$pontuacaoMovel</td>";
+           $pontuacaoMovel = $linha["pontoM"];
+           echo   "<td>$pontuacaoMovel</td>";
 
-         $idBko = $linha["id_bko"];
-         $sqlB = mysqli_query($connect, "SELECT * FROM operador WHERE id = '{$idBko}'") or print mysql_error();
-         $linhaB = mysqli_fetch_array($sqlB);
-         $nmBko = $linhaB["login"];
-         echo   "<td>$nmBko</td>";
+           $idBko = $linha["id_bko"];
+           $sqlB = mysqli_query($connect, "SELECT * FROM operador WHERE id = '{$idBko}'") or print mysql_error();
+           $linhaB = mysqli_fetch_array($sqlB);
+           $nmBko = $linhaB["login"];
+           echo   "<td>$nmBko</td>";
 
-         echo "</tr>";
+           echo "</tr>";
 
 
 
@@ -1020,14 +1040,19 @@
 
 
 
-     } while ($linha = mysqli_fetch_assoc($sql));
-     echo "</tbody>";
+       } while ($linha = mysqli_fetch_assoc($sql));
+       echo "</tbody>";
 
-     echo "</table>";
-     echo "</div>";
-   else:
-     echo "<h2>Sem dados</h2>";
-   endif;
+       echo "</table>";
+       echo "</div>";
+     else:
+       echo "<h5>Sem dados</h5>";
+     endif;
+   }
+
+
+
+
 
      ?>
   </div>
@@ -1038,23 +1063,23 @@
     <?php
       //Fazer lista de Id de Operadores do supervisor
 
-
-
-      $sql = mysqli_query($connect, "SELECT * FROM operador WHERE id_super = $supervisor AND cargo = 'VENDEDOR'");
+      $sql = mysqli_query($connect, "SELECT * FROM operador WHERE cargo = 'VENDEDOR'");
       $linha = mysqli_fetch_array($sql);
 
       do{
         $idOperador = $linha['id'];
-        $listaB1[] = array('id' => $idOperador);
+        $idSuper = $linha['id_super'];
+        $listaB1[] = array('idVendedor' => $idOperador, 'idSupervisor' => $idSuper);
       }while ($linha = mysqli_fetch_assoc($sql));
-      $contador = count($listaB1);
+      $contador1 = count($listaB1);
 
 
       //Fazer Lista com Id e pontos do vendedor no dia
-      for ($i = 0; $i < $contador; $i++){
+      for ($i = 0; $i < $contador1; $i++){
         $ponto = 0;
         $pontoM = 0;
-        $idOperador2 = $listaB1[$i]['id'];
+        $idOperador2 = $listaB1[$i]['idVendedor'];
+        $idSuper2 = $listaB1[$i]['idSupervisor'];
         $sqlVendas = mysqli_query($connect,"SELECT * FROM proposta
           WHERE id_vendedor = '$idOperador2' AND situacao = 'APROVADO' AND data_venda = '$hoje'
           OR id_vendedor = '$idOperador2' AND situacao = 'APROVADO DIVERGENTE' AND data_venda = '$hoje'");
@@ -1067,36 +1092,154 @@
         } while ($linhaVendas = mysqli_fetch_assoc($sqlVendas));
           $ponto += $pontoM;
 
-          $data2[] = array('id' => $idOperador2, 'ponto' => $ponto);
-
-          // Colocar lista 2 em ordem
-          foreach ($data2 as $key => $row) {
-              $idV[$key]  = $row['id'];
-              $pontoGeral[$key] = $row['ponto'];
-          }
-
-          array_multisort($pontoGeral, SORT_DESC, $data);
-
+          $data2[] = array('idVendedor' => $idOperador2, 'ponto' => $ponto, 'idSupervisor' => $idSuper2);
       };
 
-      $contador = count($data2);
-      for ($i = 0; $i < $contador; $i++){
+      // Colocar lista 2 em ordem
+      foreach ($data2 as $key => $row) {
+          $pontoGeral[$key] = $row['ponto'];
+      }
+
+      array_multisort($pontoGeral, SORT_DESC, $data2);
+
+
+
+      $contador2 = count($data2);
+
+      echo "<div class=\"table-responsive-xl\">";
+      echo "<table class=\"table table-sm table-hover text-center text-truncate\">";
+      echo "<thead class=\"thead-dark\">";
+      echo "<tr>";
+      echo   "<th scope=\"col\">#</th>";
+      echo   "<th scope=\"col\">Vendedor</th>";
+      echo   "<th scope=\"col\">Pontos</th>";
+      echo   "<th scope=\"col\">Supervisor</th>";
+      echo "</tr>";
+      echo "</thead>";
+      echo "<tbody>";
+      for ($i = 0; $i < $contador2; $i++){
           $controle = $i + 1;
-          $teste1 = $data2[$i]['id'];
+          $teste1 = $data2[$i]['idVendedor'];
+          $teste4 = $data2[$i]['idSupervisor'];
 
           $teste3 = mysqli_query($connect, "SELECT * FROM operador WHERE id = $teste1");
           $linhaTeste3 = mysqli_fetch_array($teste3);
 
           $nome = $linhaTeste3['login'];
 
+          $teste3 = mysqli_query($connect, "SELECT * FROM supervisor WHERE id = $teste4");
+          $linhaTeste3 = mysqli_fetch_array($teste3);
+
+          $nomeSuper = $linhaTeste3['login'];
+
 
           $teste2 = $data2[$i]['ponto'];
-          echo "$controle ª - $nome: $teste2<br>";
+
+          echo "<tr>";
+          echo "<td>$controle ª</td>";
+          echo "<td>$nome</td>";
+          echo "<td>$teste2</td>";
+          echo "<td>$nomeSuper</td>";
+          echo "</tr>";
       };
 
+      echo "</tbody>";
+
+      echo "</table>";
+      echo "</div>";
      ?>
 
   </div>
+
+  <div style="margin: 0;">
+   <div id="ranking" style="width: 400px; height: 130px; padding: 10px; float: right; background-color: #DCDCDC; margin-bottom: 17px; overflow:auto;">
+     <h5>Ranking Supervisor:</h5>
+     <?php
+       //Fazer lista de Id de Operadores do supervisor
+
+       $sql = mysqli_query($connect, "SELECT * FROM supervisor");
+       $linha = mysqli_fetch_array($sql);
+
+       do{
+
+         $idSuper = $linha['id'];
+         $nomeSuper = $linha['login'];
+         $listaB2[] = array('idSupervisor' => $idSuper, 'nomeSupervisor' => $nomeSuper);
+       }while ($linha = mysqli_fetch_assoc($sql));
+       $contador1 = count($listaB2);
+
+
+       //Fazer Lista com Id e pontos do vendedor no dia
+       for ($i = 0; $i < $contador1; $i++){
+         $ponto = 0;
+         $pontoM = 0;
+         $nomeSuper2 = $listaB2[$i]['nomeSupervisor'];
+         $idSuper2 = $listaB2[$i]['idSupervisor'];
+         $sqlVendas = mysqli_query($connect,"SELECT * FROM proposta
+           WHERE id_super = $idSuper2 AND situacao = 'APROVADO' AND data_venda = '$hoje'
+           OR id_super = $idSuper2 AND situacao = 'APROVADO DIVERGENTE' AND data_venda = '$hoje'");
+
+         $linhaVendas = mysqli_fetch_array($sqlVendas);
+         do {
+           $ponto += $linhaVendas['ponto'];
+           $pontoM += $linhaVendas['pontoM'];
+
+         } while ($linhaVendas = mysqli_fetch_assoc($sqlVendas));
+           $ponto += $pontoM;
+
+           $dataB[] = array('ponto' => $ponto, 'nomeSupervisor' => $nomeSuper2,'idSupervisor' => $idSuper2);
+       };
+
+       // Colocar lista 2 em ordem
+       foreach ($dataB as $key => $row) {
+           $pontoSupervisor[$key] = $row['ponto'];
+           $nomeSupervisor[$key] = $row['nomeSupervisor'];
+           $idSupervisor[$key] = $row['idSupervisor'];
+       }
+
+       array_multisort($pontoSupervisor, SORT_DESC, $dataB);
+
+
+
+       $contador2 = count($dataB);
+
+       echo "<div class=\"table-responsive-xl\">";
+       echo "<table class=\"table table-sm table-hover text-center text-truncate\">";
+       echo "<thead class=\"thead-dark\">";
+       echo "<tr>";
+       echo   "<th scope=\"col\">#</th>";
+       echo   "<th scope=\"col\">Supervisor</th>";
+       echo   "<th scope=\"col\">Pontos</th>";
+       echo "</tr>";
+       echo "</thead>";
+       echo "<tbody>";
+       for ($i = 0; $i < $contador2; $i++){
+           $controle = $i + 1;
+           $teste4 = $dataB[$i]['idSupervisor'];
+
+
+           $teste3 = mysqli_query($connect, "SELECT * FROM supervisor WHERE id = $teste4");
+           $linhaTeste3 = mysqli_fetch_array($teste3);
+
+           $nomeSuper = $linhaTeste3['login'];
+
+
+           $teste2 = $data2[$i]['ponto'];
+
+           echo "<tr>";
+           echo "<td>$controle ª</td>";
+           echo "<td>$nomeSuper</td>";
+           echo "<td>$teste2</td>";
+           echo "</tr>";
+       };
+
+       echo "</tbody>";
+
+       echo "</table>";
+       echo "</div>";
+      ?>
+
+   </div>
 
     <div id="pendencias" style="width: 400px; padding: 10px; background-color: #DCDCDC; float: right; clear: right;;">
       <h5>Pendências:</h5>
@@ -1104,7 +1247,8 @@
       <?php
       $hoje = date('Y-m-d');
       $supervisor = $dados["id"];
-      $sql = mysqli_query($connect, "SELECT * FROM proposta WHERE situacao != 'APROVADO' AND situacao != 'APROVADO DIVERGENTE' AND situacao != 'CADASTRO OK' AND data_venda = '$hoje' AND id_super = '$supervisor'") or print mysql_error();
+
+      $sql = mysqli_query($connect, "SELECT * FROM proposta WHERE situacao != 'APROVADO' AND situacao != 'APROVADO DIVERGENTE' AND situacao != 'CADASTRO OK' AND data_venda = '$hoje'") or print mysql_error();
       $linha = mysqli_fetch_array($sql);
 
 
@@ -1118,6 +1262,7 @@
         echo "<tr>";
 
         echo   "<th scope=\"col\">Vendedor</th>";
+        echo   "<th scope=\"col\">Supervisor</th>";
         echo   "<th scope=\"col\">Status</th>";
         echo   "<th scope=\"col\">Data Instalação</th>";
         echo   "<th scope=\"col\">Turno</th>";
@@ -1155,6 +1300,13 @@
 
            $nmVendedor = $linhaV['login'];
             echo "<td>$nmVendedor</td>";
+
+           $idSupervisor = $linha["id_super"];
+           $sqlS = mysqli_query($connect, "SELECT * FROM supervisor WHERE id = '{$idSupervisor}'") or print mysql_error();
+           $linhaS = mysqli_fetch_array($sqlS);
+
+           $nmSupervisor = $linhaS['login'];
+            echo "<td>$nmSupervisor</td>";
 
             $status = $linha["situacao"];
             echo   "<td>$status</td>";
@@ -1293,7 +1445,7 @@
       $hoje = date('Y-m-d');
       $supervisor = $dados["id"];
 
-      $sql = mysqli_query($connect, "SELECT * FROM proposta WHERE data_instalacao = '$hoje' AND id_super = '$supervisor'") or print mysql_error();
+      $sql = mysqli_query($connect, "SELECT * FROM proposta WHERE data_instalacao = '$hoje'") or print mysql_error();
       $linha = mysqli_fetch_array($sql);
 
 
@@ -1307,6 +1459,7 @@
         echo "<tr>";
 
         echo   "<th scope=\"col\">Vendedor</th>";
+        echo   "<th scope=\"col\">Supervisor</th>";
         echo   "<th scope=\"col\">Status</th>";
         echo   "<th scope=\"col\">Data Instalação</th>";
         echo   "<th scope=\"col\">Turno</th>";
@@ -1344,6 +1497,13 @@
 
            $nmVendedor = $linhaV['login'];
             echo "<td>$nmVendedor</td>";
+
+            $idSupervisor = $linha["id_super"];
+            $sqlS = mysqli_query($connect, "SELECT * FROM supervisor WHERE id = '{$idSupervisor}'") or print mysql_error();
+            $linhaS = mysqli_fetch_array($sqlS);
+
+            $nmSupervisor = $linhaS['login'];
+             echo "<td>$nmSupervisor</td>";
 
             $status = $linha["situacao"];
             echo   "<td>$status</td>";
@@ -1482,9 +1642,9 @@
              var nomeO = $("#nomeOperador");
              var loginO = $("#loginOperador");
              var senhaO = $("#senhaOperador");
-             function incluiOperador(){
+             function incluiSupervisor(){
                $.ajax({
-                  url : "incluirOperador.php",
+                  url : "incluirSupervisor.php",
                   type : 'post',
                   data : {
                        nome : nomeO.val(),

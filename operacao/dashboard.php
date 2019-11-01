@@ -338,11 +338,11 @@
         $("#vendasDivp2").html('<?php   $mAtual = date("m");
           $vendedor = $dados["id"];
           $nmvendedor = $dados["login"];
-          $con = mysqli_connect("localhost", "root", "", "crmclik");
+
 
 
           $sqlDsz = "SELECT * FROM proposta WHERE id_vendedor = '{$vendedor}' AND MONTH(data_instalacao) = $mAtual";
-          $sqlFim = mysqli_query($con, $sqlDsz);
+          $sqlFim = mysqli_query($connect, $sqlDsz);
           $linha = mysqli_fetch_array($sqlFim);
 
 
@@ -379,7 +379,7 @@
             do {
 
               $clienteCpf = $linha["cpf_cliente"];
-              $sqlC = mysqli_query($con, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
+              $sqlC = mysqli_query($connect, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
               $linhaC = mysqli_fetch_array($sqlC);
               $idVenda = $linha["id"];
 
@@ -399,13 +399,13 @@
               echo "<td>$contratoC - $contratoS</td>";
 
                   $idVendedor = $linha["id_vendedor"];
-                  $sqlV = mysqli_query($con, "SELECT * FROM operador WHERE id = '{$idVendedor}'") or print mysql_error();
+                  $sqlV = mysqli_query($connect, "SELECT * FROM operador WHERE id = '{$idVendedor}'") or print mysql_error();
                   $linhaV = mysqli_fetch_array($sqlV);
                   $nmVend = $linhaV["login"];
                   echo   "<td>$nmVend</td>";
 
                   $idSuper = $linhaV["id_super"];
-                  $sqlS = mysqli_query($con, "SELECT * FROM supervisor WHERE id = '{$idSuper}'") or print mysql_error();
+                  $sqlS = mysqli_query($connect, "SELECT * FROM supervisor WHERE id = '{$idSuper}'") or print mysql_error();
                   $linhaS = mysqli_fetch_array($sqlS);
                   $nmSup = $linhaS["login"];
                   echo   "<td>$nmSup</td>";
@@ -458,10 +458,10 @@ $("#vendasDivp2").html("");
 $("#vendasDivp2").html('<?php   $mAtual = date("m");
   $vendedor = $dados["id"];
   $nmvendedor = $dados["login"];
-  $con = mysqli_connect("localhost", "root", "", "crmclik");
+
 
   $sqlDsz = "SELECT * FROM proposta WHERE id_vendedor = '{$vendedor}' AND MONTH(data_instalacao) = $mAtual AND situacao = 'ATIVO'";
-  $sqlFim = mysqli_query($con, $sqlDsz);
+  $sqlFim = mysqli_query($connect, $sqlDsz);
   $linha = mysqli_fetch_array($sqlFim);
 
 
@@ -498,7 +498,7 @@ $("#vendasDivp2").html('<?php   $mAtual = date("m");
     do {
 
       $clienteCpf = $linha["cpf_cliente"];
-      $sqlC = mysqli_query($con, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
+      $sqlC = mysqli_query($connect, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
       $linhaC = mysqli_fetch_array($sqlC);
       $idVenda = $linha["id"];
 
@@ -518,13 +518,13 @@ $("#vendasDivp2").html('<?php   $mAtual = date("m");
       echo "<td>$contratoC - $contratoS</td>";
 
           $idVendedor = $linha["id_vendedor"];
-          $sqlV = mysqli_query($con, "SELECT * FROM operador WHERE id = '{$idVendedor}'") or print mysql_error();
+          $sqlV = mysqli_query($connect, "SELECT * FROM operador WHERE id = '{$idVendedor}'") or print mysql_error();
           $linhaV = mysqli_fetch_array($sqlV);
           $nmVend = $linhaV["login"];
           echo   "<td>$nmVend</td>";
 
           $idSuper = $linhaV["id_super"];
-          $sqlS = mysqli_query($con, "SELECT * FROM supervisor WHERE id = '{$idSuper}'") or print mysql_error();
+          $sqlS = mysqli_query($connect, "SELECT * FROM supervisor WHERE id = '{$idSuper}'") or print mysql_error();
           $linhaS = mysqli_fetch_array($sqlS);
           $nmSup = $linhaS["login"];
           echo   "<td>$nmSup</td>";
@@ -569,10 +569,10 @@ $("#vendasDivp2").html("");
 $("#vendasDivp2").html('<?php   $mAtual = date("m");
   $vendedor = $dados["id"];
   $nmvendedor = $dados["login"];
-  $con = mysqli_connect("localhost", "root", "", "crmclik");
+
 
   $sqlDsz = "SELECT * FROM proposta WHERE id_vendedor = '{$vendedor}' AND MONTH(data_instalacao) = $mAtual AND situacao = 'APROVADO'";
-  $sqlFim = mysqli_query($con, $sqlDsz);
+  $sqlFim = mysqli_query($connect, $sqlDsz);
   $linha = mysqli_fetch_array($sqlFim);
 
 
@@ -609,7 +609,7 @@ $("#vendasDivp2").html('<?php   $mAtual = date("m");
     do {
 
       $clienteCpf = $linha["cpf_cliente"];
-      $sqlC = mysqli_query($con, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
+      $sqlC = mysqli_query($connect, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
       $linhaC = mysqli_fetch_array($sqlC);
       $idVenda = $linha["id"];
 
@@ -629,13 +629,13 @@ $("#vendasDivp2").html('<?php   $mAtual = date("m");
       echo "<td>$contratoC - $contratoS</td>";
 
           $idVendedor = $linha["id_vendedor"];
-          $sqlV = mysqli_query($con, "SELECT * FROM operador WHERE id = '{$idVendedor}'") or print mysql_error();
+          $sqlV = mysqli_query($connect, "SELECT * FROM operador WHERE id = '{$idVendedor}'") or print mysql_error();
           $linhaV = mysqli_fetch_array($sqlV);
           $nmVend = $linhaV["login"];
           echo   "<td>$nmVend</td>";
 
           $idSuper = $linhaV["id_super"];
-          $sqlS = mysqli_query($con, "SELECT * FROM supervisor WHERE id = '{$idSuper}'") or print mysql_error();
+          $sqlS = mysqli_query($connect, "SELECT * FROM supervisor WHERE id = '{$idSuper}'") or print mysql_error();
           $linhaS = mysqli_fetch_array($sqlS);
           $nmSup = $linhaS["login"];
           echo   "<td>$nmSup</td>";
@@ -680,10 +680,10 @@ $("#vendasDivp2").html("");
 $("#vendasDivp2").html('<?php   $mAtual = date("m");
   $vendedor = $dados["id"];
   $nmvendedor = $dados["login"];
-  $con = mysqli_connect("localhost", "root", "", "crmclik");
+
 
   $sqlDsz = "SELECT * FROM proposta WHERE id_vendedor = '{$vendedor}' AND MONTH(data_instalacao) = $mAtual AND situacao = 'COMERCIAL'";
-  $sqlFim = mysqli_query($con, $sqlDsz);
+  $sqlFim = mysqli_query($connect, $sqlDsz);
   $linha = mysqli_fetch_array($sqlFim);
 
 
@@ -720,7 +720,7 @@ $("#vendasDivp2").html('<?php   $mAtual = date("m");
     do {
 
       $clienteCpf = $linha["cpf_cliente"];
-      $sqlC = mysqli_query($con, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
+      $sqlC = mysqli_query($connect, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
       $linhaC = mysqli_fetch_array($sqlC);
       $idVenda = $linha["id"];
 
@@ -740,13 +740,13 @@ $("#vendasDivp2").html('<?php   $mAtual = date("m");
       echo "<td>$contratoC - $contratoS</td>";
 
           $idVendedor = $linha["id_vendedor"];
-          $sqlV = mysqli_query($con, "SELECT * FROM operador WHERE id = '{$idVendedor}'") or print mysql_error();
+          $sqlV = mysqli_query($connect, "SELECT * FROM operador WHERE id = '{$idVendedor}'") or print mysql_error();
           $linhaV = mysqli_fetch_array($sqlV);
           $nmVend = $linhaV["login"];
           echo   "<td>$nmVend</td>";
 
           $idSuper = $linhaV["id_super"];
-          $sqlS = mysqli_query($con, "SELECT * FROM supervisor WHERE id = '{$idSuper}'") or print mysql_error();
+          $sqlS = mysqli_query($connect, "SELECT * FROM supervisor WHERE id = '{$idSuper}'") or print mysql_error();
           $linhaS = mysqli_fetch_array($sqlS);
           $nmSup = $linhaS["login"];
           echo   "<td>$nmSup</td>";
@@ -791,10 +791,10 @@ $("#vendasDivp2").html("");
 $("#vendasDivp2").html('<?php   $mAtual = date("m");
   $vendedor = $dados["id"];
   $nmvendedor = $dados["login"];
-  $con = mysqli_connect("localhost", "root", "", "crmclik");
+
 
   $sqlDsz = "SELECT * FROM proposta WHERE id_vendedor = '{$vendedor}' AND MONTH(data_instalacao) = $mAtual AND situacao = 'BACKLOG'";
-  $sqlFim = mysqli_query($con, $sqlDsz);
+  $sqlFim = mysqli_query($connect, $sqlDsz);
   $linha = mysqli_fetch_array($sqlFim);
 
 
@@ -831,7 +831,7 @@ $("#vendasDivp2").html('<?php   $mAtual = date("m");
     do {
 
       $clienteCpf = $linha["cpf_cliente"];
-      $sqlC = mysqli_query($con, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
+      $sqlC = mysqli_query($connect, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
       $linhaC = mysqli_fetch_array($sqlC);
       $idVenda = $linha["id"];
 
@@ -851,13 +851,13 @@ $("#vendasDivp2").html('<?php   $mAtual = date("m");
       echo "<td>$contratoC - $contratoS</td>";
 
           $idVendedor = $linha["id_vendedor"];
-          $sqlV = mysqli_query($con, "SELECT * FROM operador WHERE id = '{$idVendedor}'") or print mysql_error();
+          $sqlV = mysqli_query($connect, "SELECT * FROM operador WHERE id = '{$idVendedor}'") or print mysql_error();
           $linhaV = mysqli_fetch_array($sqlV);
           $nmVend = $linhaV["login"];
           echo   "<td>$nmVend</td>";
 
           $idSuper = $linhaV["id_super"];
-          $sqlS = mysqli_query($con, "SELECT * FROM supervisor WHERE id = '{$idSuper}'") or print mysql_error();
+          $sqlS = mysqli_query($connect, "SELECT * FROM supervisor WHERE id = '{$idSuper}'") or print mysql_error();
           $linhaS = mysqli_fetch_array($sqlS);
           $nmSup = $linhaS["login"];
           echo   "<td>$nmSup</td>";
@@ -1112,10 +1112,10 @@ $("#vendasDivp2").html('<?php   $mAtual = date("m");
         $("#vendasDivp2").html('<?php   $mAtual = date("m", strtotime('-1 months', strtotime(date('m'))));
           $vendedor = $dados["id"];
           $nmvendedor = $dados["login"];
-          $con = mysqli_connect("localhost", "root", "", "crmclik");
+
 
           $sqlDsz = "SELECT * FROM proposta WHERE id_vendedor = '{$vendedor}' AND MONTH(data_instalacao) = $mAtual";
-          $sqlFim = mysqli_query($con, $sqlDsz);
+          $sqlFim = mysqli_query($connect, $sqlDsz);
           $linha = mysqli_fetch_array($sqlFim);
 
 
@@ -1152,7 +1152,7 @@ $("#vendasDivp2").html('<?php   $mAtual = date("m");
             do {
 
               $clienteCpf = $linha["cpf_cliente"];
-              $sqlC = mysqli_query($con, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
+              $sqlC = mysqli_query($connect, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
               $linhaC = mysqli_fetch_array($sqlC);
               $idVenda = $linha["id"];
 
@@ -1172,13 +1172,13 @@ $("#vendasDivp2").html('<?php   $mAtual = date("m");
               echo "<td>$contratoC - $contratoS</td>";
 
                   $idVendedor = $linha["id_vendedor"];
-                  $sqlV = mysqli_query($con, "SELECT * FROM operador WHERE id = '{$idVendedor}'") or print mysql_error();
+                  $sqlV = mysqli_query($connect, "SELECT * FROM operador WHERE id = '{$idVendedor}'") or print mysql_error();
                   $linhaV = mysqli_fetch_array($sqlV);
                   $nmVend = $linhaV["login"];
                   echo   "<td>$nmVend</td>";
 
                   $idSuper = $linhaV["id_super"];
-                  $sqlS = mysqli_query($con, "SELECT * FROM supervisor WHERE id = '{$idSuper}'") or print mysql_error();
+                  $sqlS = mysqli_query($connect, "SELECT * FROM supervisor WHERE id = '{$idSuper}'") or print mysql_error();
                   $linhaS = mysqli_fetch_array($sqlS);
                   $nmSup = $linhaS["login"];
                   echo   "<td>$nmSup</td>";
@@ -1225,10 +1225,10 @@ $("#vendasDivp2").html("");
 $("#vendasDivp2").html('<?php   $mAtual = date("m", strtotime('-1 months', strtotime(date('m'))));
   $vendedor = $dados["id"];
   $nmvendedor = $dados["login"];
-  $con = mysqli_connect("localhost", "root", "", "crmclik");
+
 
   $sqlDsz = "SELECT * FROM proposta WHERE id_vendedor = '{$vendedor}' AND MONTH(data_instalacao) = $mAtual AND situacao = 'ATIVO'";
-  $sqlFim = mysqli_query($con, $sqlDsz);
+  $sqlFim = mysqli_query($connect, $sqlDsz);
   $linha = mysqli_fetch_array($sqlFim);
 
 
@@ -1265,7 +1265,7 @@ $("#vendasDivp2").html('<?php   $mAtual = date("m", strtotime('-1 months', strto
     do {
 
       $clienteCpf = $linha["cpf_cliente"];
-      $sqlC = mysqli_query($con, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
+      $sqlC = mysqli_query($connect, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
       $linhaC = mysqli_fetch_array($sqlC);
       $idVenda = $linha["id"];
 
@@ -1285,13 +1285,13 @@ $("#vendasDivp2").html('<?php   $mAtual = date("m", strtotime('-1 months', strto
       echo "<td>$contratoC - $contratoS</td>";
 
           $idVendedor = $linha["id_vendedor"];
-          $sqlV = mysqli_query($con, "SELECT * FROM operador WHERE id = '{$idVendedor}'") or print mysql_error();
+          $sqlV = mysqli_query($connect, "SELECT * FROM operador WHERE id = '{$idVendedor}'") or print mysql_error();
           $linhaV = mysqli_fetch_array($sqlV);
           $nmVend = $linhaV["login"];
           echo   "<td>$nmVend</td>";
 
           $idSuper = $linhaV["id_super"];
-          $sqlS = mysqli_query($con, "SELECT * FROM supervisor WHERE id = '{$idSuper}'") or print mysql_error();
+          $sqlS = mysqli_query($connect, "SELECT * FROM supervisor WHERE id = '{$idSuper}'") or print mysql_error();
           $linhaS = mysqli_fetch_array($sqlS);
           $nmSup = $linhaS["login"];
           echo   "<td>$nmSup</td>";
@@ -1336,10 +1336,10 @@ $("#vendasDivp2").html("");
 $("#vendasDivp2").html('<?php   $mAtual = date("m", strtotime('-1 months', strtotime(date('m'))));
   $vendedor = $dados["id"];
   $nmvendedor = $dados["login"];
-  $con = mysqli_connect("localhost", "root", "", "crmclik");
+
 
   $sqlDsz = "SELECT * FROM proposta WHERE id_vendedor = '{$vendedor}' AND MONTH(data_instalacao) = $mAtual AND situacao = 'APROVADO'";
-  $sqlFim = mysqli_query($con, $sqlDsz);
+  $sqlFim = mysqli_query($connect, $sqlDsz);
   $linha = mysqli_fetch_array($sqlFim);
 
 
@@ -1376,7 +1376,7 @@ $("#vendasDivp2").html('<?php   $mAtual = date("m", strtotime('-1 months', strto
     do {
 
       $clienteCpf = $linha["cpf_cliente"];
-      $sqlC = mysqli_query($con, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
+      $sqlC = mysqli_query($connect, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
       $linhaC = mysqli_fetch_array($sqlC);
       $idVenda = $linha["id"];
 
@@ -1396,13 +1396,13 @@ $("#vendasDivp2").html('<?php   $mAtual = date("m", strtotime('-1 months', strto
       echo "<td>$contratoC - $contratoS</td>";
 
           $idVendedor = $linha["id_vendedor"];
-          $sqlV = mysqli_query($con, "SELECT * FROM operador WHERE id = '{$idVendedor}'") or print mysql_error();
+          $sqlV = mysqli_query($connect, "SELECT * FROM operador WHERE id = '{$idVendedor}'") or print mysql_error();
           $linhaV = mysqli_fetch_array($sqlV);
           $nmVend = $linhaV["login"];
           echo   "<td>$nmVend</td>";
 
           $idSuper = $linhaV["id_super"];
-          $sqlS = mysqli_query($con, "SELECT * FROM supervisor WHERE id = '{$idSuper}'") or print mysql_error();
+          $sqlS = mysqli_query($connect, "SELECT * FROM supervisor WHERE id = '{$idSuper}'") or print mysql_error();
           $linhaS = mysqli_fetch_array($sqlS);
           $nmSup = $linhaS["login"];
           echo   "<td>$nmSup</td>";
@@ -1447,10 +1447,10 @@ $("#vendasDivp2").html("");
 $("#vendasDivp2").html('<?php   $mAtual = date("m", strtotime('-1 months', strtotime(date('m'))));
   $vendedor = $dados["id"];
   $nmvendedor = $dados["login"];
-  $con = mysqli_connect("localhost", "root", "", "crmclik");
+
 
   $sqlDsz = "SELECT * FROM proposta WHERE id_vendedor = '{$vendedor}' AND MONTH(data_instalacao) = $mAtual AND situacao = 'COMERCIAL'";
-  $sqlFim = mysqli_query($con, $sqlDsz);
+  $sqlFim = mysqli_query($connect, $sqlDsz);
   $linha = mysqli_fetch_array($sqlFim);
 
 
@@ -1487,7 +1487,7 @@ $("#vendasDivp2").html('<?php   $mAtual = date("m", strtotime('-1 months', strto
     do {
 
       $clienteCpf = $linha["cpf_cliente"];
-      $sqlC = mysqli_query($con, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
+      $sqlC = mysqli_query($connect, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
       $linhaC = mysqli_fetch_array($sqlC);
       $idVenda = $linha["id"];
 
@@ -1507,13 +1507,13 @@ $("#vendasDivp2").html('<?php   $mAtual = date("m", strtotime('-1 months', strto
       echo "<td>$contratoC - $contratoS</td>";
 
           $idVendedor = $linha["id_vendedor"];
-          $sqlV = mysqli_query($con, "SELECT * FROM operador WHERE id = '{$idVendedor}'") or print mysql_error();
+          $sqlV = mysqli_query($connect, "SELECT * FROM operador WHERE id = '{$idVendedor}'") or print mysql_error();
           $linhaV = mysqli_fetch_array($sqlV);
           $nmVend = $linhaV["login"];
           echo   "<td>$nmVend</td>";
 
           $idSuper = $linhaV["id_super"];
-          $sqlS = mysqli_query($con, "SELECT * FROM supervisor WHERE id = '{$idSuper}'") or print mysql_error();
+          $sqlS = mysqli_query($connect, "SELECT * FROM supervisor WHERE id = '{$idSuper}'") or print mysql_error();
           $linhaS = mysqli_fetch_array($sqlS);
           $nmSup = $linhaS["login"];
           echo   "<td>$nmSup</td>";
@@ -1558,10 +1558,10 @@ $("#vendasDivp2").html("");
 $("#vendasDivp2").html('<?php   $mAtual = date("m", strtotime('-1 months', strtotime(date('m'))));
   $vendedor = $dados["id"];
   $nmvendedor = $dados["login"];
-  $con = mysqli_connect("localhost", "root", "", "crmclik");
+
 
   $sqlDsz = "SELECT * FROM proposta WHERE id_vendedor = '{$vendedor}' AND MONTH(data_instalacao) = $mAtual AND situacao = 'BACKLOG'";
-  $sqlFim = mysqli_query($con, $sqlDsz);
+  $sqlFim = mysqli_query($connect, $sqlDsz);
   $linha = mysqli_fetch_array($sqlFim);
 
 
@@ -1598,7 +1598,7 @@ $("#vendasDivp2").html('<?php   $mAtual = date("m", strtotime('-1 months', strto
     do {
 
       $clienteCpf = $linha["cpf_cliente"];
-      $sqlC = mysqli_query($con, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
+      $sqlC = mysqli_query($connect, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
       $linhaC = mysqli_fetch_array($sqlC);
       $idVenda = $linha["id"];
 
@@ -1618,13 +1618,13 @@ $("#vendasDivp2").html('<?php   $mAtual = date("m", strtotime('-1 months', strto
       echo "<td>$contratoC - $contratoS</td>";
 
           $idVendedor = $linha["id_vendedor"];
-          $sqlV = mysqli_query($con, "SELECT * FROM operador WHERE id = '{$idVendedor}'") or print mysql_error();
+          $sqlV = mysqli_query($connect, "SELECT * FROM operador WHERE id = '{$idVendedor}'") or print mysql_error();
           $linhaV = mysqli_fetch_array($sqlV);
           $nmVend = $linhaV["login"];
           echo   "<td>$nmVend</td>";
 
           $idSuper = $linhaV["id_super"];
-          $sqlS = mysqli_query($con, "SELECT * FROM supervisor WHERE id = '{$idSuper}'") or print mysql_error();
+          $sqlS = mysqli_query($connect, "SELECT * FROM supervisor WHERE id = '{$idSuper}'") or print mysql_error();
           $linhaS = mysqli_fetch_array($sqlS);
           $nmSup = $linhaS["login"];
           echo   "<td>$nmSup</td>";
@@ -1879,10 +1879,10 @@ $("#vendasDivp2").html('<?php   $mAtual = date("m", strtotime('-1 months', strto
         $("#vendasDivp2").html('<?php   $mAtual = date("m", strtotime('-2 months', strtotime(date('m'))));
           $vendedor = $dados["id"];
           $nmvendedor = $dados["login"];
-          $con = mysqli_connect("localhost", "root", "", "crmclik");
+
 
           $sqlDsz = "SELECT * FROM proposta WHERE id_vendedor = '{$vendedor}' AND MONTH(data_instalacao) = $mAtual";
-          $sqlFim = mysqli_query($con, $sqlDsz);
+          $sqlFim = mysqli_query($connect, $sqlDsz);
           $linha = mysqli_fetch_array($sqlFim);
 
 
@@ -1919,7 +1919,7 @@ $("#vendasDivp2").html('<?php   $mAtual = date("m", strtotime('-1 months', strto
             do {
 
               $clienteCpf = $linha["cpf_cliente"];
-              $sqlC = mysqli_query($con, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
+              $sqlC = mysqli_query($connect, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
               $linhaC = mysqli_fetch_array($sqlC);
               $idVenda = $linha["id"];
 
@@ -1939,13 +1939,13 @@ $("#vendasDivp2").html('<?php   $mAtual = date("m", strtotime('-1 months', strto
               echo "<td>$contratoC - $contratoS</td>";
 
                   $idVendedor = $linha["id_vendedor"];
-                  $sqlV = mysqli_query($con, "SELECT * FROM operador WHERE id = '{$idVendedor}'") or print mysql_error();
+                  $sqlV = mysqli_query($connect, "SELECT * FROM operador WHERE id = '{$idVendedor}'") or print mysql_error();
                   $linhaV = mysqli_fetch_array($sqlV);
                   $nmVend = $linhaV["login"];
                   echo   "<td>$nmVend</td>";
 
                   $idSuper = $linhaV["id_super"];
-                  $sqlS = mysqli_query($con, "SELECT * FROM supervisor WHERE id = '{$idSuper}'") or print mysql_error();
+                  $sqlS = mysqli_query($connect, "SELECT * FROM supervisor WHERE id = '{$idSuper}'") or print mysql_error();
                   $linhaS = mysqli_fetch_array($sqlS);
                   $nmSup = $linhaS["login"];
                   echo   "<td>$nmSup</td>";
@@ -1992,10 +1992,10 @@ $("#vendasDivp2").html("");
 $("#vendasDivp2").html('<?php   $mAtual = date("m", strtotime('-2 months', strtotime(date('m'))));
   $vendedor = $dados["id"];
   $nmvendedor = $dados["login"];
-  $con = mysqli_connect("localhost", "root", "", "crmclik");
+
 
   $sqlDsz = "SELECT * FROM proposta WHERE id_vendedor = '{$vendedor}' AND MONTH(data_instalacao) = $mAtual AND situacao = 'ATIVO'";
-  $sqlFim = mysqli_query($con, $sqlDsz);
+  $sqlFim = mysqli_query($connect, $sqlDsz);
   $linha = mysqli_fetch_array($sqlFim);
 
 
@@ -2032,7 +2032,7 @@ $("#vendasDivp2").html('<?php   $mAtual = date("m", strtotime('-2 months', strto
     do {
 
       $clienteCpf = $linha["cpf_cliente"];
-      $sqlC = mysqli_query($con, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
+      $sqlC = mysqli_query($connect, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
       $linhaC = mysqli_fetch_array($sqlC);
       $idVenda = $linha["id"];
 
@@ -2052,13 +2052,13 @@ $("#vendasDivp2").html('<?php   $mAtual = date("m", strtotime('-2 months', strto
       echo "<td>$contratoC - $contratoS</td>";
 
           $idVendedor = $linha["id_vendedor"];
-          $sqlV = mysqli_query($con, "SELECT * FROM operador WHERE id = '{$idVendedor}'") or print mysql_error();
+          $sqlV = mysqli_query($connect, "SELECT * FROM operador WHERE id = '{$idVendedor}'") or print mysql_error();
           $linhaV = mysqli_fetch_array($sqlV);
           $nmVend = $linhaV["login"];
           echo   "<td>$nmVend</td>";
 
           $idSuper = $linhaV["id_super"];
-          $sqlS = mysqli_query($con, "SELECT * FROM supervisor WHERE id = '{$idSuper}'") or print mysql_error();
+          $sqlS = mysqli_query($connect, "SELECT * FROM supervisor WHERE id = '{$idSuper}'") or print mysql_error();
           $linhaS = mysqli_fetch_array($sqlS);
           $nmSup = $linhaS["login"];
           echo   "<td>$nmSup</td>";
@@ -2103,10 +2103,10 @@ $("#vendasDivp2").html("");
 $("#vendasDivp2").html('<?php   $mAtual = date("m", strtotime('-2 months', strtotime(date('m'))));
   $vendedor = $dados["id"];
   $nmvendedor = $dados["login"];
-  $con = mysqli_connect("localhost", "root", "", "crmclik");
+
 
   $sqlDsz = "SELECT * FROM proposta WHERE id_vendedor = '{$vendedor}' AND MONTH(data_instalacao) = $mAtual AND situacao = 'APROVADO'";
-  $sqlFim = mysqli_query($con, $sqlDsz);
+  $sqlFim = mysqli_query($connect, $sqlDsz);
   $linha = mysqli_fetch_array($sqlFim);
 
 
@@ -2143,7 +2143,7 @@ $("#vendasDivp2").html('<?php   $mAtual = date("m", strtotime('-2 months', strto
     do {
 
       $clienteCpf = $linha["cpf_cliente"];
-      $sqlC = mysqli_query($con, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
+      $sqlC = mysqli_query($connect, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
       $linhaC = mysqli_fetch_array($sqlC);
       $idVenda = $linha["id"];
 
@@ -2163,13 +2163,13 @@ $("#vendasDivp2").html('<?php   $mAtual = date("m", strtotime('-2 months', strto
       echo "<td>$contratoC - $contratoS</td>";
 
           $idVendedor = $linha["id_vendedor"];
-          $sqlV = mysqli_query($con, "SELECT * FROM operador WHERE id = '{$idVendedor}'") or print mysql_error();
+          $sqlV = mysqli_query($connect, "SELECT * FROM operador WHERE id = '{$idVendedor}'") or print mysql_error();
           $linhaV = mysqli_fetch_array($sqlV);
           $nmVend = $linhaV["login"];
           echo   "<td>$nmVend</td>";
 
           $idSuper = $linhaV["id_super"];
-          $sqlS = mysqli_query($con, "SELECT * FROM supervisor WHERE id = '{$idSuper}'") or print mysql_error();
+          $sqlS = mysqli_query($connect, "SELECT * FROM supervisor WHERE id = '{$idSuper}'") or print mysql_error();
           $linhaS = mysqli_fetch_array($sqlS);
           $nmSup = $linhaS["login"];
           echo   "<td>$nmSup</td>";
@@ -2214,10 +2214,10 @@ $("#vendasDivp2").html("");
 $("#vendasDivp2").html('<?php   $mAtual = date("m", strtotime('-2 months', strtotime(date('m'))));
   $vendedor = $dados["id"];
   $nmvendedor = $dados["login"];
-  $con = mysqli_connect("localhost", "root", "", "crmclik");
+
 
   $sqlDsz = "SELECT * FROM proposta WHERE id_vendedor = '{$vendedor}' AND MONTH(data_instalacao) = $mAtual AND situacao = 'COMERCIAL'";
-  $sqlFim = mysqli_query($con, $sqlDsz);
+  $sqlFim = mysqli_query($connect, $sqlDsz);
   $linha = mysqli_fetch_array($sqlFim);
 
 
@@ -2254,7 +2254,7 @@ $("#vendasDivp2").html('<?php   $mAtual = date("m", strtotime('-2 months', strto
     do {
 
       $clienteCpf = $linha["cpf_cliente"];
-      $sqlC = mysqli_query($con, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
+      $sqlC = mysqli_query($connect, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
       $linhaC = mysqli_fetch_array($sqlC);
       $idVenda = $linha["id"];
 
@@ -2274,13 +2274,13 @@ $("#vendasDivp2").html('<?php   $mAtual = date("m", strtotime('-2 months', strto
       echo "<td>$contratoC - $contratoS</td>";
 
           $idVendedor = $linha["id_vendedor"];
-          $sqlV = mysqli_query($con, "SELECT * FROM operador WHERE id = '{$idVendedor}'") or print mysql_error();
+          $sqlV = mysqli_query($connect, "SELECT * FROM operador WHERE id = '{$idVendedor}'") or print mysql_error();
           $linhaV = mysqli_fetch_array($sqlV);
           $nmVend = $linhaV["login"];
           echo   "<td>$nmVend</td>";
 
           $idSuper = $linhaV["id_super"];
-          $sqlS = mysqli_query($con, "SELECT * FROM supervisor WHERE id = '{$idSuper}'") or print mysql_error();
+          $sqlS = mysqli_query($connect, "SELECT * FROM supervisor WHERE id = '{$idSuper}'") or print mysql_error();
           $linhaS = mysqli_fetch_array($sqlS);
           $nmSup = $linhaS["login"];
           echo   "<td>$nmSup</td>";
@@ -2325,10 +2325,10 @@ $("#vendasDivp2").html("");
 $("#vendasDivp2").html('<?php   $mAtual = date("m", strtotime('-2 months', strtotime(date('m'))));
   $vendedor = $dados["id"];
   $nmvendedor = $dados["login"];
-  $con = mysqli_connect("localhost", "root", "", "crmclik");
+
 
   $sqlDsz = "SELECT * FROM proposta WHERE id_vendedor = '{$vendedor}' AND MONTH(data_instalacao) = $mAtual AND situacao = 'BACKLOG'";
-  $sqlFim = mysqli_query($con, $sqlDsz);
+  $sqlFim = mysqli_query($connect, $sqlDsz);
   $linha = mysqli_fetch_array($sqlFim);
 
 
@@ -2365,7 +2365,7 @@ $("#vendasDivp2").html('<?php   $mAtual = date("m", strtotime('-2 months', strto
     do {
 
       $clienteCpf = $linha["cpf_cliente"];
-      $sqlC = mysqli_query($con, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
+      $sqlC = mysqli_query($connect, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
       $linhaC = mysqli_fetch_array($sqlC);
       $idVenda = $linha["id"];
 
@@ -2385,13 +2385,13 @@ $("#vendasDivp2").html('<?php   $mAtual = date("m", strtotime('-2 months', strto
       echo "<td>$contratoC - $contratoS</td>";
 
           $idVendedor = $linha["id_vendedor"];
-          $sqlV = mysqli_query($con, "SELECT * FROM operador WHERE id = '{$idVendedor}'") or print mysql_error();
+          $sqlV = mysqli_query($connect, "SELECT * FROM operador WHERE id = '{$idVendedor}'") or print mysql_error();
           $linhaV = mysqli_fetch_array($sqlV);
           $nmVend = $linhaV["login"];
           echo   "<td>$nmVend</td>";
 
           $idSuper = $linhaV["id_super"];
-          $sqlS = mysqli_query($con, "SELECT * FROM supervisor WHERE id = '{$idSuper}'") or print mysql_error();
+          $sqlS = mysqli_query($connect, "SELECT * FROM supervisor WHERE id = '{$idSuper}'") or print mysql_error();
           $linhaS = mysqli_fetch_array($sqlS);
           $nmSup = $linhaS["login"];
           echo   "<td>$nmSup</td>";

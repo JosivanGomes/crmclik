@@ -68,8 +68,8 @@
            <li>
              <a href="pendenciabko.php" class="btn btn-primary" role="button" aria-pressed="true">Pendências <span class="badge badge-danger">
                 <?php
-                  $con = mysqli_connect("localhost", "root", "", "crmclik");
-                  $sql = mysqli_query($con, "SELECT * FROM proposta WHERE sitctrt = 'N-OK' AND situacao = 'APROVADO' OR situacao = 'CHAMADO' OR situacao = 'CHECK OK'") or print mysql_error();
+                  
+                  $sql = mysqli_query($connect, "SELECT * FROM proposta WHERE sitctrt = 'N-OK' AND situacao = 'APROVADO' OR situacao = 'CHAMADO' OR situacao = 'CHECK OK'") or print mysql_error();
                   echo mysqli_num_rows($sql);
                 ?>
               </span>
@@ -97,8 +97,8 @@
      <?php
        $vendedor = $dados["id"];
        $nmvendedor = $dados["login"];
-       $con = mysqli_connect("localhost", "root", "", "crmclik");
-       $sql = mysqli_query($con, "SELECT * FROM proposta WHERE id_bkoPend = '{$vendedor}' AND situacao != 'CHAMADO' AND situacao != 'CHECK OK'") or print mysql_error();
+       
+       $sql = mysqli_query($connect, "SELECT * FROM proposta WHERE id_bkoPend = '{$vendedor}' AND situacao != 'CHAMADO' AND situacao != 'CHECK OK'") or print mysql_error();
        $linha = mysqli_fetch_array($sql);
 
 
@@ -151,7 +151,7 @@
            </td>";
 
            $clienteCpf = $linha["cpf_cliente"];
-           $sqlC = mysqli_query($con, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
+           $sqlC = mysqli_query($connect, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
            $linhaC = mysqli_fetch_array($sqlC);
 
             //TEM QUE PODER MUDAR O STATUS
@@ -260,7 +260,7 @@
              echo   "<td>$pontuacao</td>";
 
              $idBko = $linha["id_bko"];
-             $sqlB = mysqli_query($con, "SELECT * FROM operador WHERE id = '{$idBko}'") or print mysql_error();
+             $sqlB = mysqli_query($connect, "SELECT * FROM operador WHERE id = '{$idBko}'") or print mysql_error();
              $linhaB = mysqli_fetch_array($sqlB);
              $nmBko = $linhaB["login"];
              echo   "<td>$nmBko</td>";
@@ -318,7 +318,7 @@
 
        //Check ok - Chamado
 
-        $sql = mysqli_query($con, "SELECT * FROM PROPOSTA WHERE id_bkoPend = '{$vendedor}' AND situacao != 'APROVADO'") or print mysql_error();
+        $sql = mysqli_query($connect, "SELECT * FROM PROPOSTA WHERE id_bkoPend = '{$vendedor}' AND situacao != 'APROVADO'") or print mysql_error();
         $linha = mysqli_fetch_array($sql);
 
         if(mysqli_num_rows($sql)>0):
@@ -370,7 +370,7 @@
             </td>";
 
             $clienteCpf = $linha["cpf_cliente"];
-            $sqlC = mysqli_query($con, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
+            $sqlC = mysqli_query($connect, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
             $linhaC = mysqli_fetch_array($sqlC);
 
              //TEM QUE PODER MUDAR O STATUS
@@ -503,7 +503,7 @@
               echo   "<td>$pontuacao</td>";
 
               $idBko = $linha["id_bko"];
-              $sqlB = mysqli_query($con, "SELECT * FROM operador WHERE id = '{$idBko}'") or print mysql_error();
+              $sqlB = mysqli_query($connect, "SELECT * FROM operador WHERE id = '{$idBko}'") or print mysql_error();
               $linhaB = mysqli_fetch_array($sqlB);
               $nmBko = $linhaB["login"];
               echo   "<td>$nmBko</td>";
@@ -607,7 +607,7 @@
 
        echo "<h4>Geral:</h4>";
 
-       $sql = mysqli_query($con, "SELECT * FROM proposta WHERE sitctrt = 'N-OK' AND situacao = 'APROVADO' OR situacao = 'CHAMADO' OR situacao = 'CHECK OK'") or print mysql_error();
+       $sql = mysqli_query($connect, "SELECT * FROM proposta WHERE sitctrt = 'N-OK' AND situacao = 'APROVADO' OR situacao = 'CHAMADO' OR situacao = 'CHECK OK'") or print mysql_error();
        $linha = mysqli_fetch_array($sql);
 
 
@@ -648,7 +648,7 @@
 
            $idVenda = $linha["id"];
 
-           $sqlx = mysqli_query($con, "SELECT * FROM proposta WHERE id = '$idVenda' and id_bkoPend != '0'");
+           $sqlx = mysqli_query($connect, "SELECT * FROM proposta WHERE id = '$idVenda' and id_bkoPend != '0'");
            if(mysqli_num_rows($sqlx)>0):
              echo   "<td>
 
@@ -666,7 +666,7 @@
           endif;
 
            $clienteCpf = $linha["cpf_cliente"];
-           $sqlC = mysqli_query($con, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
+           $sqlC = mysqli_query($connect, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
            $linhaC = mysqli_fetch_array($sqlC);
 
 
@@ -774,7 +774,7 @@
              echo   "<td>$pontuacao</td>";
 
              $idBko = $linha["id_bko"];
-             $sqlB = mysqli_query($con, "SELECT * FROM operador WHERE id = '{$idBko}'") or print mysql_error();
+             $sqlB = mysqli_query($connect, "SELECT * FROM operador WHERE id = '{$idBko}'") or print mysql_error();
              $linhaB = mysqli_fetch_array($sqlB);
              $nmBko = $linhaB["login"];
              echo   "<td>$nmBko</td>";

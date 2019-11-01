@@ -64,6 +64,7 @@
 
 
       <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+        <h1 style="color: #007bff;">SUPERVISÃO</h1>
         <?php
           if(!empty($erros)):
             foreach ($erros as $erro):

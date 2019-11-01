@@ -69,8 +69,8 @@
              <a href="dm1.php" class="btn btn-primary" role="button" aria-pressed="true">D -1 <span class="badge badge-danger">
                 <?php
                   $dm1 = date('Y-m-d', strtotime('+1 days'));
-                  $con = mysqli_connect("localhost", "root", "", "crmclik");
-                  $sql = mysqli_query($con, "SELECT * FROM proposta WHERE situacao = 'APROVADO' AND data_instalacao = '$dm1'") or print mysql_error();
+                  
+                  $sql = mysqli_query($connect, "SELECT * FROM proposta WHERE situacao = 'APROVADO' AND data_instalacao = '$dm1'") or print mysql_error();
                   echo mysqli_num_rows($sql);
                 ?>
               </span>
@@ -81,8 +81,8 @@
              <a href="divergente.php" class="btn btn-primary" role="button" aria-pressed="true" style="margin-left: 10px;">Divergente <span class="badge badge-danger">
                 <?php
                   $d = date('m');
-                  $con = mysqli_connect("localhost", "root", "", "crmclik");
-                  $sql = mysqli_query($con, "SELECT * FROM proposta WHEREproposta WHERE MONTH(data_instalacao) = '$dm1' AND situacao = 'APROVADO DIVERGENTE' OR situacao = 'BACKLOG'") or print mysql_error();
+                  
+                  $sql = mysqli_query($connect, "SELECT * FROM proposta WHEREproposta WHERE MONTH(data_instalacao) = '$dm1' AND situacao = 'APROVADO DIVERGENTE' OR situacao = 'BACKLOG'") or print mysql_error();
                   echo mysqli_num_rows($sql);
                 ?>
               </span>
@@ -93,8 +93,8 @@
              <a href="cancelados.php" class="btn btn-danger" role="button" aria-pressed="true" style="margin-left: 10px;">Cancelados <span class="badge badge-primary">
                 <?php
                   $d = date('m');
-                  $con = mysqli_connect("localhost", "root", "", "crmclik");
-                  $sql = mysqli_query($con, "SELECT * FROM proposta WHERE situacao = 'CANCELADO' AND MONTH(data_instalacao) = '$d'") or print mysql_error();
+                  
+                  $sql = mysqli_query($connect, "SELECT * FROM proposta WHERE situacao = 'CANCELADO' AND MONTH(data_instalacao) = '$d'") or print mysql_error();
                   echo mysqli_num_rows($sql);
                 ?>
               </span>
@@ -119,8 +119,8 @@
      <?php
      $vendedor = $dados["id"];
      $nmvendedor = $dados["login"];
-     $con = mysqli_connect("localhost", "root", "", "crmclik");
-     $sql = mysqli_query($con, "SELECT * FROM proposta WHERE id_bkoPend = '{$vendedor}' AND situacao = 'TRATAMENTO CANCELADO'") or print mysql_error();
+     
+     $sql = mysqli_query($connect, "SELECT * FROM proposta WHERE id_bkoPend = '{$vendedor}' AND situacao = 'TRATAMENTO CANCELADO'") or print mysql_error();
      $linha = mysqli_fetch_array($sql);
 
      echo "<h4>Pessoal:</h4>";
@@ -163,14 +163,14 @@
 
 
          $clienteCpf = $linha["cpf_cliente"];
-         $sqlC = mysqli_query($con, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
+         $sqlC = mysqli_query($connect, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
          $linhaC = mysqli_fetch_array($sqlC);
          $idVenda = $linha["id"];
 
 
 
          $clienteCpf = $linha["cpf_cliente"];
-         $sqlC = mysqli_query($con, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
+         $sqlC = mysqli_query($connect, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
          $linhaC = mysqli_fetch_array($sqlC);
 
          $idVenda = $linha["id"];
@@ -207,13 +207,13 @@
            endif;
 
            $idVendedor = $linha["id_vendedor"];
-           $sqlV = mysqli_query($con, "SELECT * FROM operador WHERE id = '{$idVendedor}'") or print mysql_error();
+           $sqlV = mysqli_query($connect, "SELECT * FROM operador WHERE id = '{$idVendedor}'") or print mysql_error();
            $linhaV = mysqli_fetch_array($sqlV);
            $nmVend = $linhaV["login"];
            echo   "<td>$nmVend</td>";
 
            $idSuper = $linhaV["id_super"];
-           $sqlS = mysqli_query($con, "SELECT * FROM supervisor WHERE id = '{$idSuper}'") or print mysql_error();
+           $sqlS = mysqli_query($connect, "SELECT * FROM supervisor WHERE id = '{$idSuper}'") or print mysql_error();
            $linhaS = mysqli_fetch_array($sqlS);
            $nmSup = $linhaS["login"];
            echo   "<td>$nmSup</td>";
@@ -348,7 +348,7 @@
        //Dados Gerais
        echo "<h4>Geral:</h4>";
        $mes = date('m');
-       $sql = mysqli_query($con, "SELECT * FROM proposta WHERE MONTH(data_instalacao) = '$mes' and situacao = 'CANCELADO'") or print mysql_error();
+       $sql = mysqli_query($connect, "SELECT * FROM proposta WHERE MONTH(data_instalacao) = '$mes' and situacao = 'CANCELADO'") or print mysql_error();
        $linha = mysqli_fetch_array($sql);
 
 
@@ -388,7 +388,7 @@
          do {
 
            $clienteCpf = $linha["cpf_cliente"];
-           $sqlC = mysqli_query($con, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
+           $sqlC = mysqli_query($connect, "SELECT * FROM cliente WHERE cpf = '{$clienteCpf}'") or print mysql_error();
            $linhaC = mysqli_fetch_array($sqlC);
 
            $idVenda = $linha["id"];
@@ -421,13 +421,13 @@
              endif;
 
              $idVendedor = $linha["id_vendedor"];
-             $sqlV = mysqli_query($con, "SELECT * FROM operador WHERE id = '{$idVendedor}'") or print mysql_error();
+             $sqlV = mysqli_query($connect, "SELECT * FROM operador WHERE id = '{$idVendedor}'") or print mysql_error();
              $linhaV = mysqli_fetch_array($sqlV);
              $nmVend = $linhaV["login"];
              echo   "<td>$nmVend</td>";
 
              $idSuper = $linhaV["id_super"];
-             $sqlS = mysqli_query($con, "SELECT * FROM supervisor WHERE id = '{$idSuper}'") or print mysql_error();
+             $sqlS = mysqli_query($connect, "SELECT * FROM supervisor WHERE id = '{$idSuper}'") or print mysql_error();
              $linhaS = mysqli_fetch_array($sqlS);
              $nmSup = $linhaS["login"];
              echo   "<td>$nmSup</td>";

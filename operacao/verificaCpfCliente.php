@@ -6,8 +6,8 @@ if(isset($_POST['cpf'])){
     $cpfPostado = $_POST['cpf'];
 
     #Conecta banco de dados
-    $con = mysqli_connect("localhost", "root", "", "crmclik");
-    $sql = mysqli_query($con, "SELECT * FROM cliente WHERE cpf = '{$cpfPostado}'") or print mysql_error();
+    
+    $sql = mysqli_query($connect, "SELECT * FROM cliente WHERE cpf = '{$cpfPostado}'") or print mysql_error();
 
     #Se o retorno for maior do que zero, diz que já existe um.
     if(mysqli_num_rows($sql)>0)

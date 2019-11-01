@@ -12,7 +12,7 @@
 
   //Dados
   $id = $_SESSION['id_usuario'];
-  $sql = "SELECT * FROM supervisor WHERE id = '$id'";
+  $sql = "SELECT * FROM gerencia WHERE id = '$id'";
   $resultado = mysqli_query($connect, $sql);
   $dados = mysqli_fetch_array($resultado);
 
@@ -64,7 +64,7 @@
 
 
            <li class="nav-item dropdown">
-             <a class="nav-link" href="super.php">Home</a>
+             <a class="nav-link" href="gerencia.php">Home</a>
            </li>
 
            <li class="nav-item dropdown">
@@ -145,7 +145,7 @@
    <?php
    $hoje = date('m');
    $supervisor = $dados["id"];
-   
+
    $sql = mysqli_query($connect, "SELECT * FROM proposta WHERE id_super = '{$supervisor}' AND MONTH(data_venda) = $hoje AND (situacao = 'CANCELADO' OR situacao = 'COMERCIAL' OR situacao = 'TECNICO') ") or print mysql_error();
    $linha = mysqli_fetch_array($sql);
 
@@ -333,7 +333,7 @@
   $hoje = date('m');
   $dia = date('Y-m-d',strtotime('-2 days'));
   $supervisor = $dados["id"];
-  
+
   $sql = mysqli_query($connect, "SELECT * FROM proposta WHERE id_super != '{$supervisor}' AND (MONTH(data_venda) = $hoje AND data_venda <= $dia) AND (situacao = 'CANCELADO' OR situacao = 'COMERCIAL' OR situacao = 'TECNICO') ") or print mysql_error();
   $linha = mysqli_fetch_array($sql);
 
